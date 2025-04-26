@@ -43,6 +43,10 @@ export default tseslint.config(
       ],
       '@typescript-eslint/member-ordering': 'error',
       'class-methods-use-this': 'error',
+      '@typescript-eslint/no-empty-object-type': [
+        'error',
+        { allowInterfaces: 'with-single-extends', allowObjectTypes: 'never' },
+      ],
     },
     linterOptions: {
       noInlineConfig: true,
@@ -56,9 +60,15 @@ export default tseslint.config(
         'error',
         {
           cases: {
-            camelCase: true,
+            kebabCase: true,
             pascalCase: true,
           },
+        },
+      ],
+      'unicorn/prevent-abbreviations': [
+        'error',
+        {
+          allowList: { props: true, ref: true, Props: true, env: true },
         },
       ],
     },
