@@ -1,31 +1,30 @@
-## Pull request type
+## Pull Request Type  
+Please check the type of change your PR introduces: 
 
-<!-- Please try to limit your pull request to one type, submit multiple pull requests if needed -->
+- [ ] Bugfix  
+- [ ] Feature  
+- [ ] Code style update (formatting, renaming)  
+- [ ] Refactoring (no functional/API changes)  
+- [ ] Build-related changes  
+- [ ] Documentation updates  
+- [ ] Other:
 
-Please check the type of change your PR introduces:
+## Current Behavior  
+<!--Describe the current system behavior (if applicable) --> 
 
-- [ ] Bugfix
-- [ ] Feature
-- [ ] Code style update (formatting, renaming)
-- [ ] Refactoring (no functional changes, no api changes)
-- [ ] Build related changes
-- [ ] Documentation content changes
-- [ ] Other (please describe):
+## New Behavior  
+<!--Describe the new behavior after your changes-->
 
-## What is the current behavior?
+## Changes  
+<!--Detailed description of code changes-->
+-   
+- 
+-   
 
-<!-- Please describe the current behavior that you are modifying, or link to a relevant issue -->
+## Issues
+Reference issues numbers using `#`
 
-Issue Number: N/A
-
-## What is the new behavior?
-
-<!-- Please describe the behavior or changes that are being added by this PR -->
-
--
--
--
-
-## Other information
-
+## Other information 
 <!-- Any other information that is important to this PR such as screenshots of how the component looks before and after the change -->
+
+## Screenshots (if needed)  
