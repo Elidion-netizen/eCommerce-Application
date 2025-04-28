@@ -10,14 +10,11 @@ export default defineConfig({
     },
   },
   test: {
-    globals: true,
     environment: 'jsdom',
-    
     coverage: {
       reporter: ['text', 'html'],
       reportsDirectory: './coverage',
-
     },
-    //setupFiles: ['./src/test/setup.ts'],
+    include: ['src/tests/**/*.test.{ts,tsx}'],
   },
 });
