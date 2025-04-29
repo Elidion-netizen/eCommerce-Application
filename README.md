@@ -64,21 +64,21 @@
 
 In the project directory, you can run:
 
-### `npm run dev`
-Runs the app in development mode.\
+#### `npm run dev`
+Runs the app in development mode.
 
-### `npm run build`
-Builds the app for production to the `dist` folder.\
+#### `npm run build`
+Builds the app for production to the `dist` folder.
 
-### `npm run preview`
+#### `npm run preview`
 Previews the production build locally.
 
-### `npm run lint`
+#### `npm run lint`
 Lints all JavaScript/TypeScript files using ESLint.
 
-### `npm run lint:styles`
+#### `npm run lint:styles`
 Lints all CSS files using Stylelint.
 
-### `npm run test`
+#### `npm run test`
 Runs the tests using Vitest.
 
