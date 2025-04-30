@@ -25,7 +25,6 @@
 - **Zustand**: A simple state management tool for React.
 - **Chakra UI**: A library for building accessible and customizable React components.
 - **Emotion**: A CSS-in-JS library for styling in React applications.
-- **Next Themes**: A library for handling light/dark themes.
 - **React Icons**: A library for integrating icons into React projects.
 
 ### 🛠 Development Tools:
