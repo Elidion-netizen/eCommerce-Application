@@ -1,54 +1,83 @@
-# React + TypeScript + Vite
+# E-Commerce Application - Sweet Shop 🍭
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📄 Description
 
-Currently, two official plugins are available:
+**E-Commerce Application** is a demonstration single-page application for an online sweet shop, developed as part of an educational project aimed at practicing team collaboration skills using the Scrum methodology. Users can browse and filter confectionery products, manage their cart, and place orders. The project utilizes CommerceTools, a cloud-based platform that enables efficient catalog updates and order processing. Development was carried out by a team of three developers over the course of four sprints, using external APIs.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🎯 Project goals:
+* Gain experience working with the Scrum methodology and team development.
+* Improve skills in development using React and TypeScript.
+* Master integration with external services via APIs, including CommerceTools.
+* Gain experience in application testing and improving code quality.
 
-## Expanding the ESLint configuration
+## ✨ Features:
+- **User Authentication**: Registration and login functionality for users.
+- **Product Catalog**: Ability to browse and filter products based on categories and other attributes.
+- **Shopping Cart**: Add products to the cart, view the cart, and proceed to checkout.
+- **Order Management**: Users can complete orders, while admins can manage and track orders.
+- **Responsive Design**: Ensures a smooth experience across all devices by being fully responsive.
+- **CommerceTools Integration**: Seamless integration with CommerceTools for efficient product and order management.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🧰 Technologies used:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **React**: A JavaScript library for building user interfaces.
+- **React Router**: Used for handling routing and navigation between pages.
+- **Zustand**: A simple state management tool for React.
+- **Chakra UI**: A library for building accessible and customizable React components.
+- **Emotion**: A CSS-in-JS library for styling in React applications.
+- **React Icons**: A library for integrating icons into React projects.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 🛠 Development Tools:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **TypeScript**: A superset of JavaScript that adds static types.
+- **Vite**: A fast and modern build tool and development server.
+- **Vitest**: A test framework for running unit tests.
+- **ESLint**: A linter for identifying and fixing code issues.
+- **Prettier**: A code formatter to maintain consistent style.
+- **Stylelint**: A linter for CSS to ensure clean and consistent styling.
+- **Husky**: For managing git hooks (pre-commit, pre-push).
+- **Commitlint**: Ensures commit messages follow a consistent format.
+- **Lint-staged**: Runs linters on staged files before commit.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## 🚀 How to Run Locally
+
+1. **Clone the repository**  
+   ```bash
+   git clone https://github.com/Elidion-netizen/eCommerce-Application.git
+   ```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+3. **Run local server**
+   ```bash
+   npm run dev
+   ```
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
+
+
+## 📜 Available Scripts
+
+In the project directory, you can run:
+
+#### `npm run dev`
+Runs the app in development mode.
+
+#### `npm run build`
+Builds the app for production to the `dist` folder.
+
+#### `npm run preview`
+Previews the production build locally.
+
+#### `npm run lint`
+Lints all JavaScript/TypeScript files using ESLint.
+
+#### `npm run lint:styles`
+Lints all CSS files using Stylelint.
+
+#### `npm run test`
+Runs the tests using Vitest.
+

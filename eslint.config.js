@@ -11,6 +11,7 @@ export default tseslint.config(
   {
     extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked],
     files: ['**/*.{ts,tsx}'],
+    ignores: ['vitest.config.ts'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
