@@ -52,6 +52,7 @@ const Header = (): React.JSX.Element => {
       >
         <Flex align="center" gap={2}>
           <MdBakeryDining size={28} color={colors.icon} />
+
           <Link
             asChild
             color={colors.text}
