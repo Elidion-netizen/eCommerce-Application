@@ -9,10 +9,22 @@ import {
   createToaster,
 } from '@chakra-ui/react';
 
-export const toaster = createToaster({
+const toaster = createToaster({
   placement: 'bottom-end',
   pauseOnPageIdle: true,
 });
+
+export const showToast = (options: {
+  title?: string;
+  description?: string;
+  status?: 'success' | 'error' | 'loading';
+  duration?: number;
+}): void => {
+  toaster.create({
+    ...options,
+    duration: options.duration ?? 5000,
+  });
+};
 
 export const Toaster = (): React.JSX.Element => {
   return (
