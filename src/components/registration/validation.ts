@@ -1,7 +1,6 @@
 import type { FormData } from './FormData';
 import type { FormErrors } from './FormData';
 
-// Вспомогательные функции для валидации
 const containsNumbers = (string_: string): boolean => /\d/.test(string_);
 const isFutureDate = (dateString: string): boolean =>
   new Date(dateString) > new Date();
