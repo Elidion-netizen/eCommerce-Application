@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import type { FormData } from './FormData';
 import { validateForm, isFormValid } from './validation';
 import { showToast } from '../ui/toaster';

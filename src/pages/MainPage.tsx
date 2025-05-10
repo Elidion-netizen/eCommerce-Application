@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, Text, Button } from '@chakra-ui/react';
 import { useColorMode } from '../components/ui/color-mode';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 
 const MainPage = (): React.JSX.Element => {
   const { colorMode } = useColorMode();

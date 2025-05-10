@@ -1,32 +1,32 @@
 import { Box, Flex, Link } from '@chakra-ui/react';
 import { ColorModeButton, useColorMode } from './color-mode';
 import { MdBakeryDining } from 'react-icons/md';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { useLocation } from 'react-router';
+
+const headerColors = {
+  light: {
+    bg: 'rgba(230, 201, 169, 0.9)',
+    text: '#5C3D2E',
+    textHover: '#8D6E63',
+    icon: '#BC8A5F',
+    border: '#E6C9A8',
+    active: '#BC8A5F',
+  },
+  dark: {
+    bg: 'rgba(56, 37, 31, 0.9)',
+    text: '#EFEBE9',
+    textHover: '#D4A373',
+    icon: '#D4A373',
+    border: '#5D4037',
+    active: '#F6AD55',
+  },
+};
 
 const Header = (): React.JSX.Element => {
   const { colorMode } = useColorMode();
   const location = useLocation();
   const currentPath = location.pathname;
-
-  const headerColors = {
-    light: {
-      bg: 'rgba(230, 201, 169, 0.9)',
-      text: '#5C3D2E',
-      textHover: '#8D6E63',
-      icon: '#BC8A5F',
-      border: '#E6C9A8',
-      active: '#BC8A5F',
-    },
-    dark: {
-      bg: 'rgba(56, 37, 31, 0.9)',
-      text: '#EFEBE9',
-      textHover: '#D4A373',
-      icon: '#D4A373',
-      border: '#5D4037',
-      active: '#F6AD55',
-    },
-  };
 
   const colors = colorMode === 'dark' ? headerColors.dark : headerColors.light;
 
@@ -52,19 +52,17 @@ const Header = (): React.JSX.Element => {
       >
         <Flex align="center" gap={2}>
           <MdBakeryDining size={28} color={colors.icon} />
-          <Box
-            as={RouterLink}
-            to="/"
+          <Link
+            asChild
             color={colors.text}
             fontWeight="bold"
             letterSpacing="wide"
             fontSize="lg"
-            cursor={'default'}
             _hover={{ textDecoration: 'none' }}
             _focus={{ outline: 'none' }}
           >
-            CROISSANT
-          </Box>
+            <RouterLink to="/">CROISSANT</RouterLink>
+          </Link>
         </Flex>
 
         <Flex gap={{ base: 4, md: 8 }} align="center">
@@ -76,9 +74,8 @@ const Header = (): React.JSX.Element => {
 
                 return (
                   <Link
+                    asChild
                     key={path}
-                    as={isActive ? Box : RouterLink}
-                    to={isActive ? undefined : path}
                     color={isActive ? colors.active : colors.text}
                     fontWeight="medium"
                     fontSize="md"
@@ -105,7 +102,9 @@ const Header = (): React.JSX.Element => {
                       transition: 'all 0.3s ease',
                     }}
                   >
-                    {name.charAt(0).toUpperCase() + name.slice(1)}
+                    <RouterLink to={path}>
+                      {name.charAt(0).toUpperCase() + name.slice(1)}
+                    </RouterLink>
                   </Link>
                 );
               }

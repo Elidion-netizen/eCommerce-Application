@@ -1,7 +1,7 @@
-import { Box, Container, Flex, Text } from '@chakra-ui/react';
+import { Box, Container, Flex, Text, Link } from '@chakra-ui/react';
 import RegistrationForm from '../components/registration/RegistrationForm';
 import { useColorMode } from '../components/ui/color-mode';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 
 const RegistrationPage = (): React.JSX.Element => {
   const { colorMode } = useColorMode();
@@ -61,9 +61,8 @@ const RegistrationPage = (): React.JSX.Element => {
 
           <Text mt={1} color={currentColors.text}>
             Already have an account?{' '}
-            <Box
-              as={RouterLink}
-              to="/login"
+            <Link
+              asChild
               color={colorMode === 'dark' ? 'orange.300' : 'orange.600'}
               fontWeight="semibold"
               display="inline"
@@ -72,8 +71,8 @@ const RegistrationPage = (): React.JSX.Element => {
                 textUnderlineOffset: '3px',
               }}
             >
-              Sign in
-            </Box>
+              <RouterLink to="/login">Sign in</RouterLink>
+            </Link>
           </Text>
         </Flex>
       </Container>
