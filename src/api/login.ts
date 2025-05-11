@@ -1,4 +1,4 @@
-import type { LoginResponse } from '@/models/login/login.,model';
+import type { LoginResponse } from '@/models/login/login.model';
 import { validLoginError, validLogiResponse } from '@/models/login/validators';
 
 const {

@@ -14,6 +14,8 @@ import { emailValidator, passwordValidator } from './validators';
 import { useState } from 'react';
 import { CloseEyeIcon, OpenEyeIcon } from '../ui/EyeIcon';
 import { getTokenPassword } from '@/api/login';
+import { useNavigate } from 'react-router';
+import { useAuth } from '@/store/session-provider';
 
 interface FormValues {
   email: string;
@@ -23,17 +25,21 @@ interface FormValues {
 export default function LoginForm(): React.JSX.Element {
   const { colorMode } = useColorMode();
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
+    clearErrors,
   } = useForm<FormValues>();
 
   async function onSubmit(values: FormValues): Promise<void> {
     try {
       const data = await getTokenPassword(values);
-      console.log(data);
+      login(data);
+      await navigate('/');
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError('root.serverError', {
@@ -55,7 +61,12 @@ export default function LoginForm(): React.JSX.Element {
       mx="auto"
       boxShadow="md"
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        onChange={() => {
+          clearErrors('root.serverError');
+        }}
+      >
         <Stack>
           <Field.Root invalid={!!errors.email}>
             <Field.Label>Email</Field.Label>

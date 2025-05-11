@@ -4,6 +4,7 @@ import { Provider } from '@/components/ui/provider';
 import './index.css';
 import { RouterProvider } from 'react-router';
 import { router } from './router/routes';
+import { AuthProvider } from './store/session-provider';
 
 const rootElement = document.querySelector('#root');
 
@@ -13,8 +14,10 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <Provider>
-      <RouterProvider router={router} />
-    </Provider>
+    <AuthProvider>
+      <Provider>
+        <RouterProvider router={router} />
+      </Provider>
+    </AuthProvider>
   </StrictMode>
 );

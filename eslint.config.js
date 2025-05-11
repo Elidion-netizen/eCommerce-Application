@@ -48,7 +48,7 @@ export default tseslint.config(
         'error',
         { allowInterfaces: 'with-single-extends', allowObjectTypes: 'never' },
       ],
-      '@typescript-eslint/no-misused-promises': 'off',
+      '@typescript-eslint/no-misused-promises': 'warn',
     },
     linterOptions: {
       noInlineConfig: true,
@@ -79,6 +79,7 @@ export default tseslint.config(
           },
         },
       ],
+      'unicorn/no-null': 'warn',
     },
   },
   prettier,

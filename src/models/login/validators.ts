@@ -1,4 +1,4 @@
-import type { LoginError, LoginResponse } from './login.,model';
+import type { LoginError, LoginResponse } from './login.model';
 
 export function validLoginError(data: unknown): data is LoginError {
   return (
