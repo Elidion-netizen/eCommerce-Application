@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text, Button } from '@chakra-ui/react';
+import { Box, Flex, Heading, Text, Link } from '@chakra-ui/react';
 import { useColorMode } from '../components/ui/color-mode';
 import { Link as RouterLink } from 'react-router';
 
@@ -75,13 +75,12 @@ const MainPage = (): React.JSX.Element => {
           </Text>
 
           <Flex gap={4} justify={{ base: 'center', md: 'flex-start' }}>
-            <Button
-              as={RouterLink}
-              to="/register"
+            <Link
+              asChild
               bg={currentColors.button}
               color="white"
-              size="lg"
               px={8}
+              height={10}
               borderRadius="13px"
               _hover={{
                 bg: currentColors.buttonHover,
@@ -90,16 +89,14 @@ const MainPage = (): React.JSX.Element => {
               }}
               transition="all 0.2s"
             >
-              Sign Up
-            </Button>
+              <RouterLink to="/register">Sign Up</RouterLink>
+            </Link>
 
-            <Button
-              as={RouterLink}
-              to="/login"
-              variant="outline"
+            <Link
+              asChild
               borderColor={currentColors.primary}
+              borderWidth="1px"
               color={currentColors.primary}
-              size="lg"
               px={8}
               borderRadius="13px"
               _hover={{
@@ -111,8 +108,8 @@ const MainPage = (): React.JSX.Element => {
               }}
               transition="all 0.2s"
             >
-              Login
-            </Button>
+              <RouterLink to="/login">Login</RouterLink>
+            </Link>
           </Flex>
         </Box>
       </Flex>
