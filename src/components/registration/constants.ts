@@ -1,14 +1,16 @@
-export const countries = [
-  'Austria',
-  'Belgium',
-  'Germany',
-  'France',
-  'Italy',
-  'Netherlands',
-  'Spain',
-  'Sweden',
-  'United Kingdom',
-];
+export const countries = {
+  Austria: 'AT',
+  Belgium: 'BE',
+  Germany: 'DE',
+  France: 'FR',
+  Italy: 'IT',
+  Netherlands: 'NL',
+  Spain: 'ES',
+  Sweden: 'SE',
+  'United Kingdom': 'GB',
+} as const;
+
+export type CountryCode = (typeof countries)[keyof typeof countries];
 
 export const colorSchemes = {
   light: {

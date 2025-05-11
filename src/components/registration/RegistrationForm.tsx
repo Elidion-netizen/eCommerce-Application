@@ -5,6 +5,7 @@ import {
   Checkbox,
   Stack,
   Text,
+  NativeSelect,
   RadioGroup,
   VStack,
 } from '@chakra-ui/react';
@@ -170,25 +171,28 @@ const RegistrationForm = (): React.JSX.Element => {
             <Text color={currentColors.error}>{errors.shippingPostalCode}</Text>
           )}
 
-          <Input
-            name="shippingCountry"
-            list="countries"
-            placeholder="Country"
-            value={formData.shippingCountry}
+          {/* Shipping Country Select */}
+          <NativeSelect.Root
+            variant="plain"
             onChange={handleInputChange}
             bg={currentColors.inputBg}
-            borderColor={
-              errors.shippingCountry
-                ? currentColors.error
-                : currentColors.border
-            }
             _focus={{ borderColor: currentColors.primary }}
-          />
-          <datalist id="countries">
-            {countries.map((country) => (
-              <option key={country} value={country} />
-            ))}
-          </datalist>
+            p={2}
+            borderRadius="md"
+            width="100%"
+          >
+            <NativeSelect.Field
+              name="shippingCountry"
+              placeholder="Select country"
+            >
+              {Object.entries(countries).map(([name, code]) => (
+                <option key={code} value={code}>
+                  {name}
+                </option>
+              ))}
+            </NativeSelect.Field>
+            <NativeSelect.Indicator />
+          </NativeSelect.Root>
           {errors.shippingCountry && (
             <Text color={currentColors.error}>{errors.shippingCountry}</Text>
           )}
@@ -271,20 +275,28 @@ const RegistrationForm = (): React.JSX.Element => {
                 </Text>
               )}
 
-              <Input
-                name="billingCountry"
-                list="countries"
-                placeholder="Country"
-                value={formData.billingCountry}
+              {/* Billing Count ry Select */}
+              <NativeSelect.Root
+                variant="plain"
                 onChange={handleInputChange}
                 bg={currentColors.inputBg}
-                borderColor={
-                  errors.billingCountry
-                    ? currentColors.error
-                    : currentColors.border
-                }
                 _focus={{ borderColor: currentColors.primary }}
-              />
+                p={2}
+                borderRadius="md"
+                width="100%"
+              >
+                <NativeSelect.Field
+                  name="billingCountry"
+                  placeholder="Select country"
+                >
+                  {Object.entries(countries).map(([name, code]) => (
+                    <option key={code} value={code}>
+                      {name}
+                    </option>
+                  ))}
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+              </NativeSelect.Root>
               {errors.billingCountry && (
                 <Text color={currentColors.error}>{errors.billingCountry}</Text>
               )}

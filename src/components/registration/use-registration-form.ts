@@ -3,6 +3,11 @@ import { useNavigate } from 'react-router';
 import type { FormData } from './FormData';
 import { validateForm, isFormValid } from './validation';
 import { showToast } from '../ui/toaster';
+import {
+  registerUser,
+  handleRegistrationError,
+  type RegistrationError,
+} from '../../commercetools/auth';
 
 export const useRegistrationForm = (): {
   formData: FormData;
@@ -76,31 +81,41 @@ export const useRegistrationForm = (): {
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      try {
-        console.log('Form submitted:', formData);
-
-        showToast({
-          title: 'Registration Successful',
-          description: 'Your account has been created!',
-          status: 'success',
-        });
-        void navigate('/login');
-      } catch {
-        showToast({
-          title: 'Registration Failed',
-          description: 'An error occurred. Please try again.',
-          status: 'error',
-        });
-      }
+      void (async (): Promise<void> => {
+        try {
+          await registerUser(formData);
+          showToast({
+            title: 'Registration Successful',
+            description: 'Your account has been created!',
+            status: 'success',
+          });
+          void navigate('/login');
+        } catch (error) {
+          if (error instanceof Error) {
+            const registrationError = JSON.parse(
+              error.message
+            ) as RegistrationError;
+            const errorMessage = handleRegistrationError(registrationError);
+            showToast({
+              title: 'Registration Failed',
+              description: errorMessage,
+              status: 'error',
+            });
+          }
+        } finally {
+          setIsSubmitting(false);
+        }
+      })();
     } else {
       showToast({
         title: 'Form Validation Error',
         description: 'Please fix the highlighted fields.',
         status: 'error',
       });
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
+
   return {
     formData,
     errors,
