@@ -87,8 +87,13 @@ export default function LoginForm(): React.JSX.Element {
                     setShowPassword((pre) => !pre);
                   }}
                   variant="ghost"
+                  aria-label="Show password"
                 >
-                  {showPassword ? <OpenEyeIcon /> : <CloseEyeIcon />}
+                  {showPassword ? (
+                    <OpenEyeIcon color={currentColors.text} />
+                  ) : (
+                    <CloseEyeIcon color={currentColors.text} />
+                  )}
                 </IconButton>
               }
             >
