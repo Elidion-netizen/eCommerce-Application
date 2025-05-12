@@ -1,8 +1,8 @@
-# E-Commerce Application - Sweet Shop 🍭
+# E-Commerce Application - Croissant 🥐
 
 ## 📄 Description
 
-**E-Commerce Application** is a demonstration single-page application for an online sweet shop, developed as part of an educational project aimed at practicing team collaboration skills using the Scrum methodology. Users can browse and filter confectionery products, manage their cart, and place orders. The project utilizes CommerceTools, a cloud-based platform that enables efficient catalog updates and order processing. Development was carried out by a team of three developers over the course of four sprints, using external APIs.
+**E-Commerce Application** is a demonstration single-page application for an online bakery shop, developed as part of an educational project aimed at practicing team collaboration skills using the Scrum methodology. Users can browse and filter confectionery products, manage their cart, and place orders. The project utilizes CommerceTools, a cloud-based platform that enables efficient catalog updates and order processing. Development was carried out by a team of three developers over the course of four sprints, using external APIs.
 
 ### 🎯 Project goals:
 * Gain experience working with the Scrum methodology and team development.
