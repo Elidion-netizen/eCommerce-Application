@@ -2,7 +2,8 @@ import { Box, Flex, Link } from '@chakra-ui/react';
 import { ColorModeButton, useColorMode } from './color-mode';
 import { MdBakeryDining } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
+import { useSession } from '@/hooks/use-session';
 
 const headerColors = {
   light: {
@@ -26,9 +27,13 @@ const headerColors = {
 const Header = (): React.JSX.Element => {
   const { colorMode } = useColorMode();
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
 
   const colors = colorMode === 'dark' ? headerColors.dark : headerColors.light;
+
+  const { token, logout } = useSession();
+  const isAuthenticated = Boolean(token);
 
   return (
     <Box
@@ -68,48 +73,71 @@ const Header = (): React.JSX.Element => {
 
         <Flex gap={{ base: 4, md: 8 }} align="center">
           <Flex gap={{ base: 4, md: 6 }} display={{ base: 'none', md: 'flex' }}>
-            {['/catalog', '/about', '/register', '/login', '/profile'].map(
-              (path) => {
-                const name = path.slice(1);
-                const isActive = currentPath === path;
+            {[
+              '/catalog',
+              '/about',
+              ...(isAuthenticated
+                ? ['/profile', '/logout']
+                : ['/login', '/register']),
+            ].map((path) => {
+              const name = path.slice(1);
+              const isActive = currentPath === path;
 
+              if (path === '/logout') {
                 return (
                   <Link
-                    asChild
+                    as="button"
                     key={path}
-                    color={isActive ? colors.active : colors.text}
+                    color={colors.text}
                     fontWeight="medium"
                     fontSize="md"
-                    position="relative"
-                    cursor={isActive ? 'default' : 'pointer'}
-                    _hover={{
-                      textDecoration: 'none',
-                      color: isActive ? colors.active : colors.textHover,
-                      _after: {
-                        width: '100%',
-                        opacity: 1,
-                      },
+                    onClick={() => {
+                      logout();
+                      void navigate('/');
                     }}
-                    _focus={{ outline: 'none' }}
-                    _after={{
-                      content: '""',
-                      position: 'absolute',
-                      bottom: '-4px',
-                      left: 0,
-                      width: isActive ? '100%' : '0%',
-                      height: '2px',
-                      bg: colors.active,
-                      opacity: isActive ? 1 : 0,
-                      transition: 'all 0.3s ease',
-                    }}
+                    _hover={{ color: colors.textHover }}
                   >
-                    <RouterLink to={path}>
-                      {name.charAt(0).toUpperCase() + name.slice(1)}
-                    </RouterLink>
+                    Logout
                   </Link>
                 );
               }
-            )}
+
+              return (
+                <Link
+                  asChild
+                  key={path}
+                  color={isActive ? colors.active : colors.text}
+                  fontWeight="medium"
+                  fontSize="md"
+                  position="relative"
+                  cursor={isActive ? 'default' : 'pointer'}
+                  _hover={{
+                    textDecoration: 'none',
+                    color: isActive ? colors.active : colors.textHover,
+                    _after: {
+                      width: '100%',
+                      opacity: 1,
+                    },
+                  }}
+                  _focus={{ outline: 'none' }}
+                  _after={{
+                    content: '""',
+                    position: 'absolute',
+                    bottom: '-4px',
+                    left: 0,
+                    width: isActive ? '100%' : '0%',
+                    height: '2px',
+                    bg: colors.active,
+                    opacity: isActive ? 1 : 0,
+                    transition: 'all 0.3s ease',
+                  }}
+                >
+                  <RouterLink to={path}>
+                    {name.charAt(0).toUpperCase() + name.slice(1)}
+                  </RouterLink>
+                </Link>
+              );
+            })}
           </Flex>
 
           <ColorModeButton
