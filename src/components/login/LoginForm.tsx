@@ -68,7 +68,7 @@ export default function LoginForm(): React.JSX.Element {
         }}
       >
         <Stack>
-          <Field.Root invalid={!!errors.email}>
+          <Field.Root h={20} invalid={!!errors.email}>
             <Field.Label>Email</Field.Label>
             <Input
               {...register('email', emailValidator)}
@@ -78,7 +78,7 @@ export default function LoginForm(): React.JSX.Element {
             <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
           </Field.Root>
 
-          <Field.Root invalid={!!errors.password}>
+          <Field.Root h={20} invalid={!!errors.password}>
             <Field.Label>Password</Field.Label>
             <InputGroup
               endElement={

@@ -30,12 +30,12 @@ export async function getTokenPassword(data: {
     if (validLogiResponse(json)) {
       return json;
     }
-    throw new TypeError('invalid response data');
+    throw new Error('invalid response data');
   } else {
     const error: unknown = await response.json();
     if (validLoginError(error)) {
-      throw new TypeError(error.message);
+      throw new Error(error.message);
     }
-    throw new TypeError('unknown error');
+    throw new Error('unknown error');
   }
 }
