@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import type { FormData } from './FormData';
 import { validateForm, isFormValid } from './validation';
@@ -41,26 +41,53 @@ export const useRegistrationForm = (): {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const validateField = useCallback(
+    (name: keyof FormData, value: string): void => {
+      const temporaryFormData = { ...formData, [name]: value };
+      const fieldErrors = validateForm(temporaryFormData);
+
+      setErrors((previous) => {
+        if (fieldErrors[name]) {
+          return { ...previous, [name]: fieldErrors[name] };
+        }
+
+        return Object.fromEntries(
+          Object.entries(previous).filter(([key]) => key !== name)
+        );
+      });
+    },
+    [formData]
+  );
+
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     const { name, value } = event.target;
     setFormData((previous) => ({ ...previous, [name]: value }));
+    validateField(name as keyof FormData, value);
   };
 
   const handleCheckboxChange = (checked: boolean): void => {
-    setFormData((previous) => ({
-      ...previous,
-      useSameAddress: checked,
-      ...(checked
-        ? {
-            billingStreet: previous.shippingStreet,
-            billingCity: previous.shippingCity,
-            billingPostalCode: previous.shippingPostalCode,
-            billingCountry: previous.shippingCountry,
-          }
-        : {}),
-    }));
+    setFormData((previous) => {
+      const newData = {
+        ...previous,
+        useSameAddress: checked,
+      };
+
+      if (checked) {
+        newData.billingStreet = previous.shippingStreet;
+        newData.billingCity = previous.shippingCity;
+        newData.billingPostalCode = previous.shippingPostalCode;
+        newData.billingCountry = previous.shippingCountry;
+
+        validateField('billingStreet', previous.shippingStreet);
+        validateField('billingCity', previous.shippingCity);
+        validateField('billingPostalCode', previous.shippingPostalCode);
+        validateField('billingCountry', previous.shippingCountry);
+      }
+
+      return newData;
+    });
   };
 
   const handleDefaultAddressChange = (details: {

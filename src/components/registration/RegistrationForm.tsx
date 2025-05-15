@@ -9,6 +9,7 @@ import {
   RadioGroup,
   VStack,
 } from '@chakra-ui/react';
+import { PasswordInput } from '@/components/ui/password-input';
 import { useColorMode } from '../ui/color-mode';
 import { useRegistrationForm } from './use-registration-form';
 import { countries, colorSchemes } from './constants';
@@ -58,7 +59,7 @@ const RegistrationForm = (): React.JSX.Element => {
             <Text color={currentColors.error}>{errors.email}</Text>
           )}
 
-          <Input
+          <PasswordInput
             name="password"
             type="password"
             placeholder="Password"
