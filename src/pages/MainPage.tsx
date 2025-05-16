@@ -27,7 +27,7 @@ const MainPage = (): React.JSX.Element => {
   const currentColors = colorMode === 'dark' ? colors.dark : colors.light;
 
   return (
-    <Box bgGradient={currentColors.bg} minH="100vh">
+    <Box bgGradient={currentColors.bg}>
       <Flex
         direction={{ base: 'column', md: 'row' }}
         align="center"
