@@ -3,7 +3,7 @@ import { ColorModeButton, useColorMode } from './color-mode';
 import { MdBakeryDining } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router';
 import { useLocation, useNavigate } from 'react-router';
-import { useSession } from '@/hooks/use-session';
+import { useAuth } from '@/store/session-provider';
 
 const headerColors = {
   light: {
@@ -32,7 +32,7 @@ const Header = (): React.JSX.Element => {
 
   const colors = colorMode === 'dark' ? headerColors.dark : headerColors.light;
 
-  const { token, logout } = useSession();
+  const { token, logout } = useAuth();
   const isAuthenticated = Boolean(token);
 
   return (
