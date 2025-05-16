@@ -1,11 +1,10 @@
 import type { FormData } from './FormData';
 import type { FormErrors } from './FormData';
 
-const containsNumbers = (string_: string): boolean => /\d/.test(string_);
+const hasSpecialCharsOrNumbers = (string_: string): boolean =>
+  /[0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(string_);
 const isFutureDate = (dateString: string): boolean =>
   new Date(dateString) > new Date();
-const isValidPostalCode = (code: string): boolean =>
-  /^[a-zA-Z0-9\- ]{3,10}$/.test(code);
 const isMinimumAge = (dateString: string, minAge: number): boolean => {
   const birthDate = new Date(dateString);
   const ageDate = new Date();
@@ -13,37 +12,56 @@ const isMinimumAge = (dateString: string, minAge: number): boolean => {
   return birthDate <= ageDate;
 };
 
+const isValidPostalCode = (code: string): boolean =>
+  /^\d{5}$/.test(code.trim());
+
+const isValidEmail = (email: string): boolean => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+};
+
+const isValidPassword = (password: string): boolean => {
+  const trimmed = password.trim();
+  return (
+    trimmed.length >= 8 &&
+    /[A-Z]/.test(trimmed) &&
+    /[a-z]/.test(trimmed) &&
+    /[0-9]/.test(trimmed)
+  );
+};
+
 export const validateForm = (formData: FormData): FormErrors => {
   const errors: FormErrors = {};
 
   if (!formData.email) {
     errors.email = 'Email is required';
-  } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-    errors.email = 'Invalid email format';
+  } else if (!isValidEmail(formData.email)) {
+    errors.email = 'Please enter a valid email (e.g., user@example.com)';
   }
 
-  if (formData.password) {
-    if (formData.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters';
-    }
-  } else {
+  if (!formData.password) {
     errors.password = 'Password is required';
+  } else if (formData.password !== formData.password.trim()) {
+    errors.password = 'Password cannot start/end with spaces';
+  } else if (!isValidPassword(formData.password)) {
+    errors.password =
+      'Password must be 8+ characters with at least 1 uppercase, 1 lowercase and 1 number';
   }
 
   if (!formData.firstName) {
     errors.firstName = 'First name is required';
-  } else if (containsNumbers(formData.firstName)) {
-    errors.firstName = 'First name cannot contain numbers';
-  } else if (formData.firstName.length < 2) {
-    errors.firstName = 'First name must be at least 2 characters';
+  } else if (hasSpecialCharsOrNumbers(formData.firstName)) {
+    errors.firstName =
+      'First name cannot contain numbers or special characters';
+  } else if (formData.firstName.trim().length === 0) {
+    errors.firstName = 'First name must contain at least 1 character';
   }
 
   if (!formData.lastName) {
     errors.lastName = 'Last name is required';
-  } else if (containsNumbers(formData.lastName)) {
-    errors.lastName = 'Last name cannot contain numbers';
-  } else if (formData.lastName.length < 2) {
-    errors.lastName = 'Last name must be at least 2 characters';
+  } else if (hasSpecialCharsOrNumbers(formData.lastName)) {
+    errors.lastName = 'Last name cannot contain numbers or special characters';
+  } else if (formData.lastName.trim().length === 0) {
+    errors.lastName = 'Last name must contain at least 1 character';
   }
 
   if (!formData.dateOfBirth) {
@@ -56,51 +74,51 @@ export const validateForm = (formData: FormData): FormErrors => {
 
   if (!formData.shippingStreet) {
     errors.shippingStreet = 'Street is required';
-  } else if (containsNumbers(formData.shippingStreet)) {
-    errors.shippingStreet = 'Street name cannot contain numbers';
+  } else if (formData.shippingStreet.trim().length === 0) {
+    errors.shippingStreet = 'Street must contain at least 1 character';
   }
 
   if (!formData.shippingCity) {
     errors.shippingCity = 'City is required';
-  } else if (containsNumbers(formData.shippingCity)) {
-    errors.shippingCity = 'City name cannot contain numbers';
+  } else if (hasSpecialCharsOrNumbers(formData.shippingCity)) {
+    errors.shippingCity = 'City cannot contain numbers or special characters';
+  } else if (formData.shippingCity.trim().length === 0) {
+    errors.shippingCity = 'City must contain at least 1 character';
   }
 
   if (!formData.shippingPostalCode) {
     errors.shippingPostalCode = 'Postal code is required';
   } else if (!isValidPostalCode(formData.shippingPostalCode)) {
-    errors.shippingPostalCode = 'Invalid postal code format';
+    errors.shippingPostalCode = 'Postal code must be 5 digits (e.g., 10115)';
   }
 
   if (!formData.shippingCountry) {
     errors.shippingCountry = 'Country is required';
-  } else if (containsNumbers(formData.shippingCountry)) {
-    errors.shippingCountry = 'Country name cannot contain numbers';
   }
 
   if (!formData.useSameAddress) {
     if (!formData.billingStreet) {
       errors.billingStreet = 'Street is required';
-    } else if (containsNumbers(formData.billingStreet)) {
-      errors.billingStreet = 'Street name cannot contain numbers';
+    } else if (formData.billingStreet.trim().length === 0) {
+      errors.billingStreet = 'Street must contain at least 1 character';
     }
 
     if (!formData.billingCity) {
       errors.billingCity = 'City is required';
-    } else if (containsNumbers(formData.billingCity)) {
-      errors.billingCity = 'City name cannot contain numbers';
+    } else if (hasSpecialCharsOrNumbers(formData.billingCity)) {
+      errors.billingCity = 'City cannot contain numbers or special characters';
+    } else if (formData.billingCity.trim().length === 0) {
+      errors.billingCity = 'City must contain at least 1 character';
     }
 
     if (!formData.billingPostalCode) {
       errors.billingPostalCode = 'Postal code is required';
     } else if (!isValidPostalCode(formData.billingPostalCode)) {
-      errors.billingPostalCode = 'Invalid postal code format';
+      errors.billingPostalCode = 'Postal code must be 5 digits (e.g., 10115)';
     }
 
     if (!formData.billingCountry) {
       errors.billingCountry = 'Country is required';
-    } else if (containsNumbers(formData.billingCountry)) {
-      errors.billingCountry = 'Country name cannot contain numbers';
     }
   }
 
