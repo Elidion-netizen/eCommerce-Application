@@ -3,7 +3,7 @@ import { ColorModeButton, useColorMode } from './color-mode';
 import { MdBakeryDining } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router';
 import { useLocation, useNavigate } from 'react-router';
-import { useAuth } from '@/store/session-provider';
+import { useAuth } from '@/store/auth-provider';
 
 const headerColors = {
   light: {
@@ -32,8 +32,7 @@ const Header = (): React.JSX.Element => {
 
   const colors = colorMode === 'dark' ? headerColors.dark : headerColors.light;
 
-  const { token, logout } = useAuth();
-  const isAuthenticated = Boolean(token);
+  const { isAuth, logout } = useAuth();
 
   return (
     <Box
@@ -76,9 +75,7 @@ const Header = (): React.JSX.Element => {
             {[
               '/catalog',
               '/about',
-              ...(isAuthenticated
-                ? ['/profile', '/logout']
-                : ['/login', '/register']),
+              ...(isAuth ? ['/profile', '/logout'] : ['/login', '/register']),
             ].map((path) => {
               const name = path.slice(1);
               const isActive = currentPath === path;
