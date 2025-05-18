@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { CloseEyeIcon, OpenEyeIcon } from '../ui/EyeIcon';
 import { getTokenPassword } from '@/api/login';
 import { useNavigate } from 'react-router';
-import { useAuth } from '@/store/session-provider';
+import { useAuth } from '@/store/auth-provider';
 
 interface FormValues {
   email: string;

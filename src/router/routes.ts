@@ -1,5 +1,5 @@
 import RootPage from '@/pages/RootPage';
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, redirect } from 'react-router';
 import NotFoundPage from '@/pages/NotFoundPage';
 import LoginPage from '@/pages/LoginPage';
 import { protectedLoader } from './protected-router';
@@ -11,7 +11,11 @@ export const router = createBrowserRouter([
     path: '/',
     Component: RootPage,
     children: [
-      { index: true, Component: MainPage },
+      {
+        index: true,
+        loader: (): Response => redirect('main'),
+      },
+      { path: 'main', Component: MainPage },
       { path: 'register', Component: RegistrationPage },
       { path: 'login', loader: protectedLoader, Component: LoginPage },
     ],
