@@ -48,6 +48,7 @@ export default tseslint.config(
         'error',
         { allowInterfaces: 'with-single-extends', allowObjectTypes: 'never' },
       ],
+      '@typescript-eslint/no-misused-promises': 'warn',
     },
     linterOptions: {
       noInlineConfig: true,
@@ -69,9 +70,16 @@ export default tseslint.config(
       'unicorn/prevent-abbreviations': [
         'error',
         {
-          allowList: { props: true, ref: true, Props: true, env: true },
+          allowList: {
+            props: true,
+            ref: true,
+            Props: true,
+            env: true,
+            ImportMetaEnv: true,
+          },
         },
       ],
+      'unicorn/no-null': 'warn',
     },
   },
   prettier,

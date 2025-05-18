@@ -38,11 +38,11 @@ interface CommonAuthOptions {
 }
 
 const COMMON_AUTH_OPTIONS: CommonAuthOptions = {
-  host: VITE_CTP_AUTH_URL as string,
-  projectKey: VITE_CTP_PROJECT_KEY as string,
+  host: VITE_CTP_AUTH_URL,
+  projectKey: VITE_CTP_PROJECT_KEY,
   credentials: {
-    clientId: VITE_CTP_CLIENT_ID as string,
-    clientSecret: VITE_CTP_CLIENT_SECRET as string,
+    clientId: VITE_CTP_CLIENT_ID,
+    clientSecret: VITE_CTP_CLIENT_SECRET,
   },
   scopes: [VITE_CTP_SCOPES],
   fetch,
@@ -72,26 +72,26 @@ const anonymousAuthMiddlewareOptions: AuthMiddlewareOptions = {
 };
 
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
-  host: VITE_CTP_API_URL as string,
+  host: VITE_CTP_API_URL,
   httpClient: fetch,
 };
 
 export const ctpClientWithClientCredentials = new ClientBuilder()
-  .withProjectKey(VITE_CTP_PROJECT_KEY as string)
+  .withProjectKey(VITE_CTP_PROJECT_KEY)
   .withClientCredentialsFlow(clientCredentialsAuthMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
   .withLoggerMiddleware()
   .build();
 
 export const ctpClientWithAnonymousAuth = new ClientBuilder()
-  .withProjectKey(VITE_CTP_PROJECT_KEY as string)
+  .withProjectKey(VITE_CTP_PROJECT_KEY)
   .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
   .withLoggerMiddleware()
   .build();
 
 export const ctpClientWithPasswordAuth = new ClientBuilder()
-  .withProjectKey(VITE_CTP_PROJECT_KEY as string)
+  .withProjectKey(VITE_CTP_PROJECT_KEY)
   .withPasswordFlow(passwordAuthMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
   .withLoggerMiddleware()
