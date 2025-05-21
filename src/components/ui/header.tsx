@@ -1,9 +1,10 @@
-import { Box, Flex, Link } from '@chakra-ui/react';
+import { Box, Flex, Link, VStack } from '@chakra-ui/react';
 import { ColorModeButton, useColorMode } from './color-mode';
 import { MdBakeryDining } from 'react-icons/md';
 import { Link as RouterLink } from 'react-router';
 import { useLocation, useNavigate } from 'react-router';
 import { useAuth } from '@/store/auth-provider';
+import { DrawerMenu } from './drawer';
 
 const headerColors = {
   light: {
@@ -24,6 +25,14 @@ const headerColors = {
   },
 };
 
+interface RenderLinks {
+  colors: typeof headerColors.light | typeof headerColors.dark;
+  currentPath: string;
+  isAuth: boolean;
+  logout: () => void;
+  navigate: (path: string) => Promise<void>;
+}
+
 const Header = (): React.JSX.Element => {
   const { colorMode } = useColorMode();
   const location = useLocation();
@@ -33,6 +42,78 @@ const Header = (): React.JSX.Element => {
   const colors = colorMode === 'dark' ? headerColors.dark : headerColors.light;
 
   const { isAuth, logout } = useAuth();
+
+  const renderLinks = ({
+    colors,
+    currentPath,
+    isAuth,
+    logout,
+    navigate,
+  }: RenderLinks): React.JSX.Element[] => {
+    return [
+      '/catalog',
+      '/about',
+      ...(isAuth ? ['/profile', '/logout'] : ['/login', '/register']),
+    ].map((path) => {
+      const name = path.slice(1);
+      const isActive = currentPath === path;
+
+      if (path === '/logout') {
+        return (
+          <Link
+            as="button"
+            key={path}
+            color={colors.text}
+            fontWeight="medium"
+            fontSize="md"
+            onClick={() => {
+              logout();
+              void navigate('/');
+            }}
+            _hover={{ color: colors.textHover }}
+          >
+            Logout
+          </Link>
+        );
+      }
+
+      return (
+        <Link
+          asChild
+          key={path}
+          color={isActive ? colors.active : colors.text}
+          fontWeight="medium"
+          fontSize="md"
+          position="relative"
+          cursor={isActive ? 'default' : 'pointer'}
+          _hover={{
+            textDecoration: 'none',
+            color: isActive ? colors.active : colors.textHover,
+            _after: {
+              width: '100%',
+              opacity: 1,
+            },
+          }}
+          _focus={{ outline: 'none' }}
+          _after={{
+            content: '""',
+            position: 'absolute',
+            bottom: '-4px',
+            left: 0,
+            width: isActive ? '100%' : '0%',
+            height: '2px',
+            bg: colors.active,
+            opacity: isActive ? 1 : 0,
+            transition: 'all 0.3s ease',
+          }}
+        >
+          <RouterLink to={path}>
+            {name.charAt(0).toUpperCase() + name.slice(1)}
+          </RouterLink>
+        </Link>
+      );
+    });
+  };
 
   return (
     <Box
@@ -72,70 +153,32 @@ const Header = (): React.JSX.Element => {
 
         <Flex gap={{ base: 4, md: 8 }} align="center">
           <Flex gap={{ base: 4, md: 6 }} display={{ base: 'none', md: 'flex' }}>
-            {[
-              '/catalog',
-              '/about',
-              ...(isAuth ? ['/profile', '/logout'] : ['/login', '/register']),
-            ].map((path) => {
-              const name = path.slice(1);
-              const isActive = currentPath === path;
-
-              if (path === '/logout') {
-                return (
-                  <Link
-                    as="button"
-                    key={path}
-                    color={colors.text}
-                    fontWeight="medium"
-                    fontSize="md"
-                    onClick={() => {
-                      logout();
-                      void navigate('/');
-                    }}
-                    _hover={{ color: colors.textHover }}
-                  >
-                    Logout
-                  </Link>
-                );
-              }
-
-              return (
-                <Link
-                  asChild
-                  key={path}
-                  color={isActive ? colors.active : colors.text}
-                  fontWeight="medium"
-                  fontSize="md"
-                  position="relative"
-                  cursor={isActive ? 'default' : 'pointer'}
-                  _hover={{
-                    textDecoration: 'none',
-                    color: isActive ? colors.active : colors.textHover,
-                    _after: {
-                      width: '100%',
-                      opacity: 1,
-                    },
-                  }}
-                  _focus={{ outline: 'none' }}
-                  _after={{
-                    content: '""',
-                    position: 'absolute',
-                    bottom: '-4px',
-                    left: 0,
-                    width: isActive ? '100%' : '0%',
-                    height: '2px',
-                    bg: colors.active,
-                    opacity: isActive ? 1 : 0,
-                    transition: 'all 0.3s ease',
-                  }}
-                >
-                  <RouterLink to={path}>
-                    {name.charAt(0).toUpperCase() + name.slice(1)}
-                  </RouterLink>
-                </Link>
-              );
+            {renderLinks({
+              colors,
+              currentPath,
+              isAuth,
+              logout,
+              navigate: (path: string) => Promise.resolve(navigate(path)),
             })}
           </Flex>
+
+          <Box
+            display={{ base: 'block', md: 'none' }}
+            cursor={'pointer'}
+            color={colors.text}
+          >
+            <DrawerMenu>
+              <VStack align="stretch">
+                {renderLinks({
+                  colors,
+                  currentPath,
+                  isAuth,
+                  logout,
+                  navigate: (path: string) => Promise.resolve(navigate(path)),
+                })}
+              </VStack>
+            </DrawerMenu>
+          </Box>
 
           <ColorModeButton
             color={colors.text}
