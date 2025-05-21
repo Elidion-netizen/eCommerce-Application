@@ -25,7 +25,8 @@ const isValidPassword = (password: string): boolean => {
     trimmed.length >= 8 &&
     /[A-Z]/.test(trimmed) &&
     /[a-z]/.test(trimmed) &&
-    /[0-9]/.test(trimmed)
+    /[0-9]/.test(trimmed) &&
+    /[^A-Za-z0-9]/.test(trimmed)
   );
 };
 
@@ -34,6 +35,8 @@ export const validateForm = (formData: FormData): FormErrors => {
 
   if (!formData.email) {
     errors.email = 'Email is required';
+  } else if (formData.email !== formData.email.trim()) {
+    errors.email = 'Email cannot start/end with spaces';
   } else if (!isValidEmail(formData.email)) {
     errors.email = 'Please enter a valid email (e.g., user@example.com)';
   }
@@ -44,7 +47,7 @@ export const validateForm = (formData: FormData): FormErrors => {
     errors.password = 'Password cannot start/end with spaces';
   } else if (!isValidPassword(formData.password)) {
     errors.password =
-      'Password must be 8+ characters with at least 1 uppercase, 1 lowercase and 1 number';
+      'Password must be 8+ characters with at least: 1 uppercase, 1 lowercase, 1 number and 1 special character';
   }
 
   if (!formData.firstName) {
