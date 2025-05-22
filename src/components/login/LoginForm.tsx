@@ -33,7 +33,9 @@ export default function LoginForm(): React.JSX.Element {
     formState: { errors, isSubmitting },
     setError,
     clearErrors,
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    mode: 'onChange',
+  });
 
   async function onSubmit(values: FormValues): Promise<void> {
     try {
