@@ -22,7 +22,7 @@ export async function getTokenPassword(data: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: `Basic ${basicAuth}`,
       },
-      body: `grant_type=password&username=${data.email}&password=${data.password}&scope=${VITE_CTP_SCOPES}`,
+      body: `grant_type=password&username=${data.email}&password=${encodeURIComponent(data.password)}&scope=${VITE_CTP_SCOPES}`,
     }
   );
   if (response.ok) {
