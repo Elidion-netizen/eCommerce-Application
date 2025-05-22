@@ -8,6 +8,7 @@ import {
   handleRegistrationError,
   type RegistrationError,
 } from '../../commercetools/auth';
+import { useAuth } from '@/store/auth-provider';
 
 export const useRegistrationForm = (): {
   formData: FormData;
@@ -38,6 +39,7 @@ export const useRegistrationForm = (): {
   });
 
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -110,7 +112,8 @@ export const useRegistrationForm = (): {
     if (Object.keys(formErrors).length === 0) {
       void (async (): Promise<void> => {
         try {
-          await registerUser(formData);
+          const token = await registerUser(formData);
+          login(token);
           showToast({
             title: 'Registration Successful',
             description: 'Your account has been created!',

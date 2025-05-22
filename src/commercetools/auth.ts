@@ -3,6 +3,8 @@ import {
   countries,
   type CountryCode,
 } from '../components/registration/constants';
+import type { LoginResponse } from '../models/login/login.model';
+import { getTokenPassword } from '../api/login';
 
 export interface RegistrationData {
   email: string;
@@ -66,7 +68,9 @@ const createAddress = (
   country: validateCountryCode(country),
 });
 
-export const registerUser = async (data: RegistrationData): Promise<void> => {
+export const registerUser = async (
+  data: RegistrationData
+): Promise<LoginResponse> => {
   try {
     const shippingAddress = createAddress(
       data.shippingStreet,
@@ -130,6 +134,13 @@ export const registerUser = async (data: RegistrationData): Promise<void> => {
         })
       );
     }
+
+    const token = await getTokenPassword({
+      email: data.email,
+      password: data.password,
+    });
+
+    return token;
   } catch (error) {
     if (error instanceof Error) {
       throw error;
