@@ -116,7 +116,7 @@ export const useRegistrationForm = (): {
             description: 'Your account has been created!',
             status: 'success',
           });
-          void navigate('/login');
+          void navigate('/');
         } catch (error) {
           if (error instanceof Error) {
             const registrationError = JSON.parse(

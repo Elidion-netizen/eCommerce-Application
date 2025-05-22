@@ -98,15 +98,8 @@ export const registerUser = async (data: RegistrationData): Promise<void> => {
       defaultBillingAddress: data.defaultAddress === 'billing' ? 1 : undefined,
     };
 
-    const apiUrl = import.meta.env.VITE_CTP_API_URL as string;
-    const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY as string;
-
-    console.log('Request URL:', `${apiUrl}/${projectKey}/customers`);
-    console.log('Request headers:', {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer [TOKEN]',
-    });
-    console.log('Request body:', JSON.stringify(customerDraft, undefined, 2));
+    const apiUrl = import.meta.env.VITE_CTP_API_URL;
+    const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
     const response = await fetch(`${apiUrl}/${projectKey}/customers`, {
       method: 'POST',
@@ -118,8 +111,6 @@ export const registerUser = async (data: RegistrationData): Promise<void> => {
     });
 
     const responseText = await response.text();
-    console.log('Response status:', response.status);
-    console.log('Response text:', responseText);
 
     if (!response.ok) {
       let errorData: ApiResponse;
@@ -139,9 +130,6 @@ export const registerUser = async (data: RegistrationData): Promise<void> => {
         })
       );
     }
-
-    const responseData = JSON.parse(responseText) as ApiResponse;
-    console.log('Customer created successfully:', responseData);
   } catch (error) {
     if (error instanceof Error) {
       throw error;
@@ -157,18 +145,10 @@ export const registerUser = async (data: RegistrationData): Promise<void> => {
 
 const getAccessToken = async (): Promise<string> => {
   try {
-    const authUrl = import.meta.env.VITE_CTP_AUTH_URL as string;
-    const clientId = import.meta.env.VITE_CTP_CLIENT_ID as string;
-    const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET as string;
-    const scopes = import.meta.env.VITE_CTP_SCOPES as string;
-
-    // Debug information
-    console.log('Environment variables:', {
-      authUrl: authUrl ? 'Set' : 'Missing',
-      clientId: clientId ? 'Set' : 'Missing',
-      clientSecret: clientSecret ? 'Set' : 'Missing',
-      scopes: scopes ? 'Set' : 'Missing',
-    });
+    const authUrl = import.meta.env.VITE_CTP_AUTH_URL;
+    const clientId = import.meta.env.VITE_CTP_CLIENT_ID;
+    const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET;
+    const scopes = import.meta.env.VITE_CTP_SCOPES;
 
     if (!authUrl || !clientId || !clientSecret || !scopes) {
       const missingVariables = [];
