@@ -1,7 +1,3 @@
-import fetch from 'node-fetch';
-
-type Fetch = typeof fetch;
-
 import {
   ClientBuilder,
   type AuthMiddlewareOptions,
@@ -34,7 +30,7 @@ interface CommonAuthOptions {
   projectKey: string;
   credentials: Credentials;
   scopes: [string, ...string[]];
-  fetch: Fetch;
+  fetch: typeof fetch;
 }
 
 const COMMON_AUTH_OPTIONS: CommonAuthOptions = {
