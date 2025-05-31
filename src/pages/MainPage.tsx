@@ -1,119 +1,195 @@
-import { Box, Flex, Heading, Text, Link } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Heading,
+  Text,
+  Link,
+  Container,
+  Image,
+} from '@chakra-ui/react';
 import { useColorMode } from '../components/ui/color-mode';
 import { Link as RouterLink } from 'react-router';
+import { useEffect, useState } from 'react';
+import { productService, type IProductProjection } from '../api/products';
+import { ProductGrid } from '../components/ui/product-grid';
+import { colors } from '../components/ui/colors';
+import { PageLoader } from '../components/ui/page-loader';
 
 const MainPage = (): React.JSX.Element => {
   const { colorMode } = useColorMode();
+  const [products, setProducts] = useState<IProductProjection[]>([]);
+  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [isProductsLoading, setIsProductsLoading] = useState(true);
+  const [error, setError] = useState<string | undefined>();
 
-  const colors = {
-    light: {
-      bg: 'linear(to-br, #F5E9DC, #F8F1E9)',
-      primary: '#D4A373',
-      secondary: '#E6C9A8',
-      text: '#5C3D2E',
-      button: '#D4A373',
-      buttonHover: '#BC8A5F',
-    },
-    dark: {
-      bg: 'linear(to-b, #3E2723, #5D4037)',
-      primary: '#8D6E63',
-      secondary: '#A1887F',
-      text: '#EFEBE9',
-      button: '#BC8A5F',
-      buttonHover: '#D4A373',
-    },
-  };
+  useEffect(() => {
+    const loadProducts = async (): Promise<void> => {
+      try {
+        setIsPageLoading(true);
+        setIsProductsLoading(true);
+        setError(undefined);
+        setIsPageLoading(false);
 
-  const currentColors = colorMode === 'dark' ? colors.dark : colors.light;
+        const data = await productService.getProducts(10);
+        setProducts(data);
+      } catch (error) {
+        console.error('Failed to load products:', error);
+        setError('Failed to load products. Please try again later.');
+      } finally {
+        setIsProductsLoading(false);
+      }
+    };
+    void loadProducts();
+  }, []);
+
+  const currentColors = colors[colorMode];
 
   return (
-    <Box bgGradient={currentColors.bg}>
-      <Flex
-        direction={{ base: 'column', md: 'row' }}
-        align="center"
-        justify="space-between"
-        minH="calc(100vh - 80px)"
-        px={{ base: 4, md: 8, lg: 16 }}
-        py={12}
-        position="relative"
-        overflow="hidden"
-      >
-        <Box
-          zIndex={2}
-          maxW={{ base: '100%', md: '50%' }}
-          textAlign={{ base: 'center', md: 'left' }}
-        >
-          <Text
-            fontSize={{ base: 'lg', md: 'xl' }}
-            mb={2}
-            color={currentColors.text}
-            fontWeight="medium"
+    <>
+      <PageLoader isLoading={isPageLoading} />
+      <Box bgGradient={currentColors.gradient}>
+        <Container maxW="container.xl" py={12}>
+          <Flex
+            direction={{ base: 'column', md: 'row' }}
+            align="center"
+            justify="space-between"
+            mb={12}
+            px={{ base: 4, md: 8 }}
+            gap={8}
+            minH="calc(90vh - 100px)"
           >
-            Welcome to
-          </Text>
-
-          <Heading
-            as="h1"
-            size={{ base: '2xl', md: '3xl', lg: '4xl' }}
-            lineHeight="shorter"
-            mb={4}
-            color={currentColors.primary}
-            fontWeight="bold"
-            letterSpacing="tight"
-          >
-            CROISSANT
-          </Heading>
-
-          <Text
-            fontSize={{ base: 'md', md: 'lg' }}
-            mb={8}
-            color={currentColors.text}
-            maxW={{ md: '90%' }}
-          >
-            The freshest and most fragrant pastries. Natural ingredients,
-            handmade with love in every crumb.
-          </Text>
-
-          <Flex gap={4} justify={{ base: 'center', md: 'flex-start' }}>
-            <Link
-              asChild
-              bg={currentColors.button}
-              color="white"
-              px={8}
-              height={10}
-              borderRadius="13px"
-              _hover={{
-                bg: currentColors.buttonHover,
-                transform: 'translateY(-2px)',
-                boxShadow: 'lg',
-              }}
-              transition="all 0.2s"
+            <Box
+              zIndex={2}
+              maxW={{ base: '100%', md: '45%' }}
+              textAlign={{ base: 'center', md: 'left' }}
+              ml={{ base: 0, md: 0 }}
             >
-              <RouterLink to="/register">Sign Up</RouterLink>
-            </Link>
+              <Text
+                fontSize={{ base: 'xl', md: '2xl' }}
+                mb={2}
+                color={currentColors.text}
+                fontWeight="medium"
+              >
+                Welcome to
+              </Text>
 
-            <Link
-              asChild
-              borderColor={currentColors.primary}
-              borderWidth="1px"
-              color={currentColors.primary}
-              px={8}
-              borderRadius="13px"
-              _hover={{
-                bg:
-                  colorMode === 'dark'
-                    ? 'rgba(141, 110, 99, 0.1)'
-                    : 'rgba(212, 163, 115, 0.1)',
-                transform: 'translateY(-2px)',
-              }}
-              transition="all 0.2s"
+              <Heading
+                as="h1"
+                size={{ base: '2xl', md: '3xl', lg: '4xl' }}
+                lineHeight="shorter"
+                mb={4}
+                color={currentColors.primary}
+                fontWeight="bold"
+                letterSpacing="tight"
+              >
+                CROISSANT
+              </Heading>
+
+              <Text
+                fontSize={{ base: 'md', md: 'xl' }}
+                mb={4}
+                color={currentColors.text}
+                maxW={{ md: '100%' }}
+                lineHeight="tall"
+              >
+                Step into a world of artisanal baking where every pastry tells a
+                story of passion and tradition.
+              </Text>
+
+              <Text
+                fontSize={{ base: 'md', md: 'xl' }}
+                mb={8}
+                color={currentColors.text}
+                maxW={{ md: '100%' }}
+                lineHeight="tall"
+              >
+                From classic butter croissants to innovative seasonal creations,
+                each bite brings you closer to the authentic taste of French
+                patisserie.
+              </Text>
+
+              <Flex gap={4} justify={{ base: 'center', md: 'flex-start' }}>
+                <Link
+                  asChild
+                  bg={currentColors.button}
+                  color="white"
+                  px={11}
+                  height={14}
+                  borderRadius="13px"
+                  _hover={{
+                    bg: currentColors.buttonHover,
+                    transform: 'translateY(-2px)',
+                    boxShadow: 'lg',
+                  }}
+                  transition="all 0.2s"
+                  fontSize={{ base: 'md', md: 'xl' }}
+                >
+                  <RouterLink to="/register">Sign Up</RouterLink>
+                </Link>
+
+                <Link
+                  asChild
+                  borderColor={currentColors.primary}
+                  borderWidth="1px"
+                  color={currentColors.primary}
+                  px={8}
+                  borderRadius="13px"
+                  fontSize={{ base: 'md', md: 'xl' }}
+                  _hover={{
+                    bg:
+                      colorMode === 'dark'
+                        ? 'rgba(141, 110, 99, 0.1)'
+                        : 'rgba(212, 163, 115, 0.1)',
+                    transform: 'translateY(-2px)',
+                  }}
+                  transition="all 0.2s"
+                >
+                  <RouterLink to="/login">Login</RouterLink>
+                </Link>
+              </Flex>
+            </Box>
+
+            <Box
+              display="block"
+              position="relative"
+              mr={0}
+              order={{ base: 2, md: 1 }}
             >
-              <RouterLink to="/login">Login</RouterLink>
-            </Link>
+              <Image
+                src="https://cdn.corenexis.com/i/m/ma30/6W1jWN.png?token=1d9425777460b6f274e0a698ba48530f"
+                alt="Sale"
+                w="500px"
+                h="auto"
+                borderRadius={15}
+                objectFit="contain"
+                transition="all 0.3s ease"
+              />
+            </Box>
           </Flex>
-        </Box>
-      </Flex>
-    </Box>
+
+          <Box px={{ base: 4, md: 8 }}>
+            <Heading
+              as="h2"
+              size={{ base: 'xl', md: '2xl', lg: '3xl' }}
+              textAlign={{ base: 'center' }}
+              lineHeight="shorter"
+              mb={12}
+              color={currentColors.text}
+              fontWeight="medium"
+              letterSpacing="tight"
+              cursor={'default'}
+            >
+              FEATURED PRODUCTS
+            </Heading>
+            <ProductGrid
+              products={products}
+              isLoading={isProductsLoading}
+              error={error}
+            />
+          </Box>
+        </Container>
+      </Box>
+    </>
   );
 };
 
