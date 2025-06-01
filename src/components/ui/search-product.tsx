@@ -29,11 +29,11 @@ export const ProductSearch = ({
           onLoading(true);
           const results = searchProductsByName(products, query);
           onResults(results);
-          onError('Some error message');
+          onError('');
           onLoading(false);
         } else {
           onResults(products);
-          onError('Some error message');
+          onError('');
           onLoading(false);
         }
       } catch {
