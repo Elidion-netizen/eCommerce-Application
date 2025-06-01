@@ -1,134 +1,72 @@
-import { Box, Heading, Container, Flex, Button, Text } from '@chakra-ui/react';
+import { useState } from 'react';
+import { Box, Heading, Container, Flex, Spinner } from '@chakra-ui/react';
 import { useColorMode } from '../components/ui/color-mode';
-import { useEffect, useState, useRef } from 'react';
-import {
-  productService,
-  type IProductWithSortFields,
-  enrichProductsForSorting,
-} from '../api/products';
-import { ProductGrid } from '../components/ui/product-grid';
 import { colors } from '../components/ui/colors';
 import { PageLoader } from '../components/ui/page-loader';
+import { ProductGrid } from '../components/ui/product-grid';
+import { ProductFilter } from '@/components/ui/product-filter';
+import { SortMenu } from '@/components/ui/sort-menu';
+import { useCatalogLogic } from '../hooks/use-catalog-logic';
+import { filterProductsByCategory } from '@/api/products';
+import { CategoryNavigation } from '@/components/ui/product-nav';
+import { ProductSearch } from '@/components/ui/search-product';
+
+const manualCategories = ['Cake', 'Eclair', 'Croissant'];
 
 const CatalogPage = (): React.JSX.Element => {
   const { colorMode } = useColorMode();
-
-  const [allProducts, setAllProducts] = useState<IProductWithSortFields[]>([]);
-
-  const [products, setProducts] = useState<IProductWithSortFields[]>([]);
-  const [isPageLoading, setIsPageLoading] = useState(true);
-  const [isProductsLoading, setIsProductsLoading] = useState(true);
-  const [error, setError] = useState<string | undefined>();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const menuReference = useRef<HTMLDivElement>(null);
-
-  const submenuReference = useRef<HTMLDivElement>(null);
-
-  const handleMouseEnterPrice = (): void => {
-    setIsPriceSubmenuOpen(true);
-  };
-
-  const handleMouseLeavePrice = (): void => {
-    setIsPriceSubmenuOpen(false);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent): void => {
-      if (
-        menuReference.current &&
-        !menuReference.current.contains(event.target as Node)
-      ) {
-        setIsMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return (): void => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    const loadProducts = async (): Promise<void> => {
-      try {
-        setIsPageLoading(true);
-        setIsProductsLoading(true);
-        setError(undefined);
-
-        const data = await productService.getProducts(10);
-        const enriched = enrichProductsForSorting(data);
-
-        setAllProducts(enriched);
-        setProducts(enriched);
-      } catch (error) {
-        console.error('Failed to load products:', error);
-        setError('Failed to load products. Please try again later.');
-      } finally {
-        setIsPageLoading(false);
-        setIsProductsLoading(false);
-      }
-    };
-    void loadProducts();
-  }, []);
-
   const currentColors = colors[colorMode];
 
-  const [isPriceSubmenuOpen, setIsPriceSubmenuOpen] = useState(false);
+  const {
+    products: allProducts,
+    isPageLoading,
+    isProductsLoading,
+    error,
+    isFilterOpen,
+    setIsFilterOpen,
+    selectedFlavors,
+    setSelectedFlavors,
+    selectedPriceRange,
+    setSelectedPriceRange,
+    onlyDiscounted,
+    setOnlyDiscounted,
+    menuReference,
+    applyFullFilter,
+    handleMainFilter,
+    handlePriceFilter,
+    flavors,
+    priceRanges,
+  } = useCatalogLogic();
 
-  const handleMainFilter = (filter: 'all' | 'price' | 'discounted'): void => {
-    if (filter === 'price') {
-      setIsPriceSubmenuOpen(!isPriceSubmenuOpen);
-      return;
-    }
-    setIsMenuOpen(false);
-    setIsPriceSubmenuOpen(false);
-    setIsProductsLoading(true);
-    setError(undefined);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [searchResults, setSearchResults] = useState<typeof allProducts>([]);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState<string | undefined>();
 
-    try {
-      switch (filter) {
-        case 'all': {
-          setProducts(allProducts);
-          break;
-        }
-        case 'discounted': {
-          const filtered = allProducts.filter((p) => p.discountAmount > 0);
-          setProducts(filtered);
-          break;
-        }
-        default: {
-          break;
-        }
-      }
-    } catch {
-      setError('Failed to apply filter');
-    } finally {
-      setIsProductsLoading(false);
-    }
+  const filteredProductsByCategory = filterProductsByCategory(
+    allProducts,
+    selectedCategories
+  );
+
+  const handleCategoryClick = (category: string): void => {
+    const updatedCategories = selectedCategories.includes(category)
+      ? selectedCategories.filter((c) => c !== category)
+      : [...selectedCategories, category];
+
+    setSelectedCategories(updatedCategories);
+
+    applyFullFilter();
   };
 
-  const handlePriceFilter = (order: 'asc' | 'desc'): void => {
-    setIsMenuOpen(false);
-    setIsPriceSubmenuOpen(false);
-    setIsProductsLoading(true);
-    setError(undefined);
-
-    try {
-      const sorted = [...allProducts].sort((a, b) =>
-        order === 'asc' ? a.price - b.price : b.price - a.price
-      );
-      setProducts(sorted);
-    } catch {
-      setError('Failed to apply price filter');
-    } finally {
-      setIsProductsLoading(false);
-    }
+  const handleAllCategoriesClick = (): void => {
+    setSelectedCategories([]);
+    applyFullFilter();
   };
 
   return (
     <>
       <PageLoader isLoading={isPageLoading} />
-      <Box bg={currentColors.bg} minH="100vh" p={4}>
+      <Box bg={currentColors.bg} minH="100vh" p={4} overflowX="auto">
         <Container maxW="container.xl" py={12}>
           <Box px={{ base: 4, md: 8 }}>
             <Flex
@@ -142,150 +80,82 @@ const CatalogPage = (): React.JSX.Element => {
                 as="h2"
                 size={{ base: 'xl', md: '2xl', lg: '3xl' }}
                 textAlign={{ base: 'center', md: 'left' }}
-                lineHeight="shorter"
                 color={currentColors.text}
                 fontWeight="medium"
                 letterSpacing="tight"
-                cursor="default"
               >
                 CATALOG
               </Heading>
 
               <Box position="relative" ref={menuReference}>
-                <Button
-                  bg="#D4A373"
-                  color="#5C3D2E"
-                  _hover={{ bg: '#BC8A5F', color: '#5C3D2E' }}
-                  onClick={() => {
-                    setIsMenuOpen(!isMenuOpen);
-                  }}
-                  minW="120px"
-                  textAlign="center"
-                  fontWeight={800}
-                  boxShadow="md"
-                  borderRadius="md"
-                >
-                  Sort
-                </Button>
-
-                {isMenuOpen && (
-                  <Box
-                    position="absolute"
-                    top="calc(100% + 4px)"
-                    left={0}
-                    bg={currentColors.cardBg}
-                    borderRadius="md"
-                    boxShadow="0 4px 10px rgba(0,0,0,0.1)"
-                    zIndex={10}
-                    width="160px"
-                    py={2}
-                  >
-                    <Text
-                      px={4}
-                      py={2}
-                      cursor="pointer"
-                      color={currentColors.text}
-                      _hover={{
-                        bg: currentColors.border,
-                        color: currentColors.cardBg,
-                        fontWeight: 'bold',
-                      }}
-                      onClick={() => {
-                        handleMainFilter('all');
-                      }}
-                    >
-                      All
-                    </Text>
-
-                    <Box
-                      position="relative"
-                      px={4}
-                      py={2}
-                      cursor="pointer"
-                      color={currentColors.text}
-                      _hover={{
-                        bg: currentColors.border,
-                        color: currentColors.cardBg,
-                        fontWeight: 'bold',
-                      }}
-                      onMouseEnter={handleMouseEnterPrice}
-                      onMouseLeave={handleMouseLeavePrice}
-                    >
-                      By Price
-                      {isPriceSubmenuOpen && (
-                        <Box
-                          ref={submenuReference}
-                          position="absolute"
-                          top={0}
-                          right={0}
-                          bg={currentColors.cardBg}
-                          borderRadius="md"
-                          boxShadow="0 4px 10px rgba(0,0,0,0.1)"
-                          width="160px"
-                          py={2}
-                          zIndex={20}
-                        >
-                          <Text
-                            px={4}
-                            py={2}
-                            cursor="pointer"
-                            color={currentColors.text}
-                            _hover={{
-                              bg: currentColors.border,
-                              color: currentColors.cardBg,
-                              fontWeight: 'bold',
-                            }}
-                            onClick={() => {
-                              handlePriceFilter('asc');
-                            }}
-                          >
-                            Low to High
-                          </Text>
-                          <Text
-                            px={4}
-                            py={2}
-                            cursor="pointer"
-                            color={currentColors.text}
-                            _hover={{
-                              bg: currentColors.border,
-                              color: currentColors.cardBg,
-                              fontWeight: 'bold',
-                            }}
-                            onClick={() => {
-                              handlePriceFilter('desc');
-                            }}
-                          >
-                            High to Low
-                          </Text>
-                        </Box>
-                      )}
-                    </Box>
-
-                    <Text
-                      px={4}
-                      py={2}
-                      cursor="pointer"
-                      color={currentColors.text}
-                      _hover={{
-                        bg: currentColors.border,
-                        color: currentColors.cardBg,
-                        fontWeight: 'bold',
-                      }}
-                      onClick={() => {
-                        handleMainFilter('discounted');
-                      }}
-                    >
-                      Sale
-                    </Text>
-                  </Box>
-                )}
+                <Flex>
+                  <SortMenu
+                    currentColors={currentColors}
+                    onSortAll={() => {
+                      handleMainFilter('all');
+                    }}
+                    onSortByPriceAsc={() => {
+                      handlePriceFilter('asc');
+                    }}
+                    onSortByPriceDesc={() => {
+                      handlePriceFilter('desc');
+                    }}
+                    onSortDiscounted={() => {
+                      handleMainFilter('discounted');
+                    }}
+                  />
+                  <ProductFilter
+                    isOpen={isFilterOpen}
+                    onToggle={() => {
+                      setIsFilterOpen(!isFilterOpen);
+                    }}
+                    selectedCategories={selectedCategories}
+                    setSelectedCategories={setSelectedCategories}
+                    selectedFlavors={selectedFlavors}
+                    setSelectedFlavors={setSelectedFlavors}
+                    selectedPriceRange={selectedPriceRange}
+                    setSelectedPriceRange={setSelectedPriceRange}
+                    onlyDiscounted={onlyDiscounted}
+                    setOnlyDiscounted={setOnlyDiscounted}
+                    onApply={() => {
+                      applyFullFilter();
+                    }}
+                    categories={manualCategories}
+                    flavors={flavors}
+                    priceRanges={priceRanges}
+                    currentColors={currentColors}
+                  />
+                </Flex>
               </Box>
             </Flex>
 
+            <ProductSearch
+              products={filteredProductsByCategory}
+              onResults={setSearchResults}
+              onLoading={setIsSearchLoading}
+              onError={setSearchError}
+            />
+
+            <CategoryNavigation
+              categories={manualCategories}
+              selectedCategories={selectedCategories}
+              onCategoryClick={handleCategoryClick}
+              onAllCategoriesClick={handleAllCategoriesClick}
+              currentColors={currentColors}
+            />
+
+            {(isSearchLoading || isProductsLoading) && <Spinner my={6} />}
+
+            {searchError && (
+              <Box color="red.500" mb={4}>
+                {searchError}
+              </Box>
+            )}
+
             <ProductGrid
-              products={products}
-              isLoading={isProductsLoading}
-              error={error}
+              products={searchResults}
+              isLoading={isSearchLoading || isProductsLoading}
+              error={error ?? (searchError || undefined)}
             />
           </Box>
         </Container>

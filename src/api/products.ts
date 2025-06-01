@@ -20,6 +20,13 @@ export interface IProductPrice {
   };
 }
 
+export interface IProductFilter {
+  categories?: string[];
+  flavors?: string[];
+  priceRange?: string | null;
+  onlyDiscounted?: boolean;
+}
+
 export interface IProductWithSortFields extends IProductProjection {
   price: number;
   discountAmount: number;
@@ -141,3 +148,79 @@ export const productUtilities = {
     return Math.round(((regular - discounted) / regular) * 100);
   },
 };
+
+export function filterProducts(
+  products: IProductWithSortFields[],
+  filters: IProductFilter
+): IProductWithSortFields[] {
+  const {
+    categories = [],
+    flavors = [],
+    priceRange = undefined,
+    onlyDiscounted = false,
+  } = filters;
+
+  const lowerCategories = categories.map((c) => c.toLowerCase().trim());
+  const lowerFlavors = flavors.map((f) => f.toLowerCase().trim());
+
+  return products.filter((p) => {
+    const localeKey = Object.keys(p.name)[0];
+    const nameText = localeKey
+      ? (p.name[localeKey] || '').toLowerCase().trim()
+      : '';
+
+    const matchesCategory =
+      lowerCategories.length === 0 ||
+      lowerCategories.some((cat) => nameText.includes(cat));
+
+    const matchesFlavor =
+      lowerFlavors.length === 0 ||
+      lowerFlavors.some((flav) => nameText.includes(flav));
+
+    const price = p.price || 0;
+    let matchesPrice = true;
+
+    if (priceRange) {
+      const [min, max] =
+        priceRange === '30+'
+          ? [30, Infinity]
+          : priceRange.split('-').map(Number);
+      matchesPrice = price >= min * 100 && price < max * 100;
+    }
+
+    const matchesDiscount = !onlyDiscounted || p.discountAmount > 0;
+
+    return matchesCategory && matchesFlavor && matchesPrice && matchesDiscount;
+  });
+}
+
+export function filterProductsByCategory(
+  products: IProductWithSortFields[],
+  categories: string[]
+): IProductWithSortFields[] {
+  if (categories.length === 0) return products;
+
+  const lowerCategories = categories.map((c) => c.toLowerCase().trim());
+  return products.filter((product) => {
+    const localeKey = Object.keys(product.name)[0];
+    const nameText = localeKey
+      ? (product.name[localeKey] || '').toLowerCase().trim()
+      : '';
+    return lowerCategories.some((cat) => nameText.includes(cat));
+  });
+}
+
+export function searchProductsByName(
+  products: IProductProjection[],
+  searchQuery: string
+): IProductProjection[] {
+  if (!searchQuery || !searchQuery.trim()) return products;
+
+  const normalizedQuery = searchQuery.toLowerCase().trim();
+
+  return products.filter((product) => {
+    return Object.values(product.name).some((localizedName) =>
+      localizedName.toLowerCase().includes(normalizedQuery)
+    );
+  });
+}
