@@ -23,6 +23,16 @@ const CatalogPage = (): React.JSX.Element => {
 
   const menuReference = useRef<HTMLDivElement>(null);
 
+  const submenuReference = useRef<HTMLDivElement>(null);
+
+  const handleMouseEnterPrice = (): void => {
+    setIsPriceSubmenuOpen(true);
+  };
+
+  const handleMouseLeavePrice = (): void => {
+    setIsPriceSubmenuOpen(false);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
       if (
@@ -63,8 +73,15 @@ const CatalogPage = (): React.JSX.Element => {
 
   const currentColors = colors[colorMode];
 
-  const handleFilter = (filter: 'all' | 'price' | 'discounted'): void => {
+  const [isPriceSubmenuOpen, setIsPriceSubmenuOpen] = useState(false);
+
+  const handleMainFilter = (filter: 'all' | 'price' | 'discounted'): void => {
+    if (filter === 'price') {
+      setIsPriceSubmenuOpen(!isPriceSubmenuOpen);
+      return;
+    }
     setIsMenuOpen(false);
+    setIsPriceSubmenuOpen(false);
     setIsProductsLoading(true);
     setError(undefined);
 
@@ -72,11 +89,6 @@ const CatalogPage = (): React.JSX.Element => {
       switch (filter) {
         case 'all': {
           setProducts(allProducts);
-          break;
-        }
-        case 'price': {
-          const sorted = [...allProducts].sort((a, b) => a.price - b.price);
-          setProducts(sorted);
           break;
         }
         case 'discounted': {
@@ -90,6 +102,24 @@ const CatalogPage = (): React.JSX.Element => {
       }
     } catch {
       setError('Failed to apply filter');
+    } finally {
+      setIsProductsLoading(false);
+    }
+  };
+
+  const handlePriceFilter = (order: 'asc' | 'desc'): void => {
+    setIsMenuOpen(false);
+    setIsPriceSubmenuOpen(false);
+    setIsProductsLoading(true);
+    setError(undefined);
+
+    try {
+      const sorted = [...allProducts].sort((a, b) =>
+        order === 'asc' ? a.price - b.price : b.price - a.price
+      );
+      setProducts(sorted);
+    } catch {
+      setError('Failed to apply price filter');
     } finally {
       setIsProductsLoading(false);
     }
@@ -147,35 +177,106 @@ const CatalogPage = (): React.JSX.Element => {
                     borderRadius="md"
                     boxShadow="0 4px 10px rgba(0,0,0,0.1)"
                     zIndex={10}
-                    width="100%"
+                    width="160px"
                     py={2}
                   >
-                    {['all', 'price', 'discounted'].map((filterType) => (
-                      <Text
-                        key={filterType}
-                        px={4}
-                        py={2}
-                        cursor="pointer"
-                        color={currentColors.text}
-                        _hover={{
-                          bg: currentColors.border,
-                          color: currentColors.cardBg,
-                          fontWeight: 'bold',
-                        }}
-                        textTransform="capitalize"
-                        onClick={() => {
-                          handleFilter(
-                            filterType as 'all' | 'price' | 'discounted'
-                          );
-                        }}
-                      >
-                        {filterType === 'all'
-                          ? 'All'
-                          : filterType === 'price'
-                            ? 'By Price'
-                            : 'Sale'}
-                      </Text>
-                    ))}
+                    <Text
+                      px={4}
+                      py={2}
+                      cursor="pointer"
+                      color={currentColors.text}
+                      _hover={{
+                        bg: currentColors.border,
+                        color: currentColors.cardBg,
+                        fontWeight: 'bold',
+                      }}
+                      onClick={() => {
+                        handleMainFilter('all');
+                      }}
+                    >
+                      All
+                    </Text>
+
+                    <Box
+                      position="relative"
+                      px={4}
+                      py={2}
+                      cursor="pointer"
+                      color={currentColors.text}
+                      _hover={{
+                        bg: currentColors.border,
+                        color: currentColors.cardBg,
+                        fontWeight: 'bold',
+                      }}
+                      onMouseEnter={handleMouseEnterPrice}
+                      onMouseLeave={handleMouseLeavePrice}
+                    >
+                      By Price
+                      {isPriceSubmenuOpen && (
+                        <Box
+                          ref={submenuReference}
+                          position="absolute"
+                          top={0}
+                          right={0}
+                          bg={currentColors.cardBg}
+                          borderRadius="md"
+                          boxShadow="0 4px 10px rgba(0,0,0,0.1)"
+                          width="160px"
+                          py={2}
+                          zIndex={20}
+                        >
+                          <Text
+                            px={4}
+                            py={2}
+                            cursor="pointer"
+                            color={currentColors.text}
+                            _hover={{
+                              bg: currentColors.border,
+                              color: currentColors.cardBg,
+                              fontWeight: 'bold',
+                            }}
+                            onClick={() => {
+                              handlePriceFilter('asc');
+                            }}
+                          >
+                            Low to High
+                          </Text>
+                          <Text
+                            px={4}
+                            py={2}
+                            cursor="pointer"
+                            color={currentColors.text}
+                            _hover={{
+                              bg: currentColors.border,
+                              color: currentColors.cardBg,
+                              fontWeight: 'bold',
+                            }}
+                            onClick={() => {
+                              handlePriceFilter('desc');
+                            }}
+                          >
+                            High to Low
+                          </Text>
+                        </Box>
+                      )}
+                    </Box>
+
+                    <Text
+                      px={4}
+                      py={2}
+                      cursor="pointer"
+                      color={currentColors.text}
+                      _hover={{
+                        bg: currentColors.border,
+                        color: currentColors.cardBg,
+                        fontWeight: 'bold',
+                      }}
+                      onClick={() => {
+                        handleMainFilter('discounted');
+                      }}
+                    >
+                      Sale
+                    </Text>
                   </Box>
                 )}
               </Box>
