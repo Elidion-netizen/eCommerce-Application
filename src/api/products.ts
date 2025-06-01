@@ -20,6 +20,35 @@ export interface IProductPrice {
   };
 }
 
+export interface IProductWithSortFields extends IProductProjection {
+  price: number;
+  discountAmount: number;
+  type: string;
+}
+
+export function enrichProductsForSorting(
+  products: IProductProjection[]
+): IProductWithSortFields[] {
+  return products.map((product) => {
+    const priceObject: IProductPrice | undefined =
+      product.masterVariant.prices?.[0];
+    const price = priceObject?.value.centAmount ?? 0;
+
+    const discountAmount = priceObject?.discounted
+      ? price - priceObject.discounted.value.centAmount
+      : 0;
+
+    const type = product.key || product.name['en'] || '';
+
+    return {
+      ...product,
+      price,
+      discountAmount,
+      type,
+    };
+  });
+}
+
 export interface IProductVariant {
   id: number;
   sku?: string;
