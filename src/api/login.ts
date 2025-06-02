@@ -25,7 +25,6 @@ export async function getTokenPassword(data: {
       body: `grant_type=password&username=${data.email}&password=${encodeURIComponent(data.password)}&scope=${VITE_CTP_SCOPES}`,
     }
   );
-  console.log(VITE_CTP_AUTH_URL, VITE_CTP_PROJECT_KEY);
   if (response.ok) {
     const json: unknown = await response.json();
     if (validLogiResponse(json)) {
