@@ -19,11 +19,14 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
-    "@chakra-ui/react": "^3.16.1",
+    "@chakra-ui/icons": "^2.2.4",
+    "@chakra-ui/react": "^3.19.1",
     "@commercetools/platform-sdk": "^8.8.0",
     "@commercetools/sdk-client-v2": "^3.0.0",
     "@commercetools/ts-client": "^3.3.0",
     "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "framer-motion": "^12.15.0",
     "next-themes": "^0.4.6",
     "node-fetch": "^3.3.2",
     "react": "^19.0.0",
