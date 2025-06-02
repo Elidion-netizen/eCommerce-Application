@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Input } from '@chakra-ui/react';
-import { searchProductsByName } from '@/api/products';
-
-interface Product {
-  id: string;
-  name: string;
-}
+import {
+  type IProductWithSortFields,
+  searchProductsByName,
+} from '@/api/products';
 
 interface ProductSearchProps {
-  products: Product[];
-  onResults: (results: Product[]) => void;
+  products: IProductWithSortFields[];
+  onResults: (results: IProductWithSortFields[]) => void;
   onLoading: (isLoading: boolean) => void;
   onError: (error: string | null) => void;
 }
