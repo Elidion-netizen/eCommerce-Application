@@ -214,9 +214,9 @@ export function filterProductsByCategory(
 }
 
 export function searchProductsByName(
-  products: IProductProjection[],
+  products: IProductWithSortFields[],
   searchQuery: string
-): IProductProjection[] {
+): IProductWithSortFields[] {
   if (!searchQuery || !searchQuery.trim()) return products;
 
   const normalizedQuery = searchQuery.toLowerCase().trim();

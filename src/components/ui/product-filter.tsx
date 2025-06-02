@@ -9,7 +9,7 @@ interface ProductFilterProps {
   setSelectedCategories: (value: string[]) => void;
   selectedFlavors: string[];
   setSelectedFlavors: (value: string[]) => void;
-  selectedPriceRange: string | null;
+  selectedPriceRange: string | null | undefined;
   setSelectedPriceRange: (value: string) => void;
   onlyDiscounted: boolean;
   setOnlyDiscounted: (value: boolean) => void;
