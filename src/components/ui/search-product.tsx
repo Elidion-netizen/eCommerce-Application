@@ -1,15 +1,37 @@
 import { useEffect, useState } from 'react';
 import { Input } from '@chakra-ui/react';
 import { searchProductsByName } from '@/api/products';
+import {
+  type IProductProjection,
+  type IProductWithSortFields,
+} from '@/api/products';
 
-interface Product {
-  id: string;
-  name: string;
+function mapProjectionToSortFields(
+  products: IProductProjection[]
+): IProductWithSortFields[] {
+  return products.map((product) => {
+    const masterVariant = product.masterVariant;
+
+    if (!masterVariant.price) {
+      throw new Error(`Product ${product.id} is missing price`);
+    }
+
+    const priceNumber = masterVariant.price.value.centAmount;
+
+    return {
+      ...product,
+      price: priceNumber,
+      discountAmount: masterVariant.discountAmount ?? 0,
+      type: 'default',
+      masterVariant,
+      variants: product.variants,
+    };
+  });
 }
 
 interface ProductSearchProps {
-  products: Product[];
-  onResults: (results: Product[]) => void;
+  products: IProductWithSortFields[];
+  onResults: (results: IProductWithSortFields[]) => void;
   onLoading: (isLoading: boolean) => void;
   onError: (error: string | null) => void;
 }
@@ -28,12 +50,13 @@ export const ProductSearch = ({
         if (query.trim()) {
           onLoading(true);
           const results = searchProductsByName(products, query);
-          onResults(results);
-          onError('');
+          const mappedResults = mapProjectionToSortFields(results);
+          onResults(mappedResults);
+          onError(null);
           onLoading(false);
         } else {
           onResults(products);
-          onError('');
+          onError(null);
           onLoading(false);
         }
       } catch {

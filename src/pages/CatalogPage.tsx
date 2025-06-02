@@ -41,7 +41,7 @@ const CatalogPage = (): React.JSX.Element => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchResults, setSearchResults] = useState<typeof allProducts>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const [searchError, setSearchError] = useState<string | undefined>();
+  const [searchError, setSearchError] = useState<string | null>(null);
 
   const filteredProductsByCategory = filterProductsByCategory(
     allProducts,
