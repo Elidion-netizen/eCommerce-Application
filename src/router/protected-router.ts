@@ -10,3 +10,13 @@ export function protectedLoader(): Response | null {
 
   return null;
 }
+
+export function userIsLoggined(): Response | null {
+  const token = localStorage.getItem(TOKEN_KEY);
+
+  if (!token) {
+    return redirect('/');
+  }
+
+  return null;
+}

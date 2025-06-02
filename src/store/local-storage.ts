@@ -2,16 +2,28 @@ import type { LoginResponse } from '@/models/login/login.model';
 import { TOKEN_KEY } from '@/constants';
 import { validToken } from '@/models/token/validators';
 
-export function getToken(): boolean {
+export function isLogged(): boolean {
   const data: unknown = localStorage.getItem(TOKEN_KEY);
   if (!data || typeof data !== 'string') {
     return false;
   }
   const session: unknown = JSON.parse(data);
-  if (!session || !validToken(session)) {
+  if (!session && !validToken(session)) {
     return false;
   }
   return true;
+}
+
+export function getToken(): string | null {
+  const data: unknown = localStorage.getItem(TOKEN_KEY);
+  if (!data || typeof data !== 'string') {
+    return null;
+  }
+  const token: unknown = JSON.parse(data);
+  if (token && validToken(token)) {
+    return token.access_token;
+  }
+  return null;
 }
 
 export function saveToken(response: LoginResponse): void {
