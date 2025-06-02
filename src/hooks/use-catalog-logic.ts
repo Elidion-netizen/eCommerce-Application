@@ -28,7 +28,7 @@ interface UseCatalogLogicResult {
   products: IProductWithSortFields[];
   isPageLoading: boolean;
   isProductsLoading: boolean;
-  error: string | undefined;
+  error: string | null;
   isMenuOpen: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isFilterOpen: boolean;
@@ -37,15 +37,13 @@ interface UseCatalogLogicResult {
   setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>;
   selectedFlavors: string[];
   setSelectedFlavors: React.Dispatch<React.SetStateAction<string[]>>;
-  selectedPriceRange: string | null | undefined;
-  setSelectedPriceRange: React.Dispatch<
-    React.SetStateAction<string | null | undefined>
-  >;
+  selectedPriceRange: string | null;
+  setSelectedPriceRange: React.Dispatch<React.SetStateAction<string | null>>;
   onlyDiscounted: boolean;
   setOnlyDiscounted: React.Dispatch<React.SetStateAction<boolean>>;
   isPriceSubmenuOpen: boolean;
   setIsPriceSubmenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  menuReference: RefObject<HTMLDivElement | null>;
+  menuReference: RefObject<HTMLDivElement>;
   toggleSelection: (
     value: string,
     selected: string[],
@@ -64,7 +62,7 @@ export function useCatalogLogic(): UseCatalogLogicResult {
   const [products, setProducts] = useState<IProductWithSortFields[]>([]);
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [isProductsLoading, setIsProductsLoading] = useState(true);
-  const [error, setError] = useState<string | undefined>();
+  const [error, setError] = useState<string | null>();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -72,9 +70,7 @@ export function useCatalogLogic(): UseCatalogLogicResult {
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
-  const [selectedPriceRange, setSelectedPriceRange] = useState<
-    string | null | undefined
-  >();
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string | null>();
   const [onlyDiscounted, setOnlyDiscounted] = useState<boolean>(false);
 
   const menuReference = useRef<HTMLDivElement>(null);
