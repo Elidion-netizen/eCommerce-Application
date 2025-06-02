@@ -28,7 +28,7 @@ interface UseCatalogLogicResult {
   products: IProductWithSortFields[];
   isPageLoading: boolean;
   isProductsLoading: boolean;
-  error: string | null | undefined;
+  error: string | null;
   isMenuOpen: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isFilterOpen: boolean;
@@ -37,10 +37,8 @@ interface UseCatalogLogicResult {
   setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>;
   selectedFlavors: string[];
   setSelectedFlavors: React.Dispatch<React.SetStateAction<string[]>>;
-  selectedPriceRange: string | null | undefined;
-  setSelectedPriceRange: React.Dispatch<
-    React.SetStateAction<string | null | undefined>
-  >;
+  selectedPriceRange: string | null;
+  setSelectedPriceRange: React.Dispatch<React.SetStateAction<string | null>>;
   onlyDiscounted: boolean;
   setOnlyDiscounted: React.Dispatch<React.SetStateAction<boolean>>;
   isPriceSubmenuOpen: boolean;
@@ -64,7 +62,8 @@ export function useCatalogLogic(): UseCatalogLogicResult {
   const [products, setProducts] = useState<IProductWithSortFields[]>([]);
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [isProductsLoading, setIsProductsLoading] = useState(true);
-  const [error, setError] = useState<string | null | undefined>();
+
+  const [error, setError] = useState<string | null>(null);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -72,9 +71,10 @@ export function useCatalogLogic(): UseCatalogLogicResult {
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
-  const [selectedPriceRange, setSelectedPriceRange] = useState<
-    string | null | undefined
-  >();
+
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string | null>(
+    null
+  );
   const [onlyDiscounted, setOnlyDiscounted] = useState<boolean>(false);
 
   const menuReference = useRef<HTMLDivElement>(null);
@@ -84,7 +84,7 @@ export function useCatalogLogic(): UseCatalogLogicResult {
       try {
         setIsPageLoading(true);
         setIsProductsLoading(true);
-        setError(undefined);
+        setError(null);
 
         const data = await productService.getProducts(10);
         const enriched = enrichProductsForSorting(data);
@@ -143,7 +143,7 @@ export function useCatalogLogic(): UseCatalogLogicResult {
     setIsMenuOpen(false);
     setIsPriceSubmenuOpen(false);
     setIsProductsLoading(true);
-    setError(undefined);
+    setError(null);
 
     try {
       switch (filter) {
@@ -168,7 +168,7 @@ export function useCatalogLogic(): UseCatalogLogicResult {
     setIsMenuOpen(false);
     setIsPriceSubmenuOpen(false);
     setIsProductsLoading(true);
-    setError(undefined);
+    setError(null);
 
     try {
       const sorted = [...allProducts].sort((a, b) =>
