@@ -6,6 +6,7 @@ import { protectedLoader } from './protected-router';
 import MainPage from '@/pages/MainPage';
 import RegistrationPage from '@/pages/RegistrationPage';
 import CatalogPage from '@/pages/CatalogPage';
+import ProductPage from '@/pages/ProductPage';
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { path: 'register', Component: RegistrationPage },
       { path: 'catalog', Component: CatalogPage },
       { path: 'login', loader: protectedLoader, Component: LoginPage },
+      { path: 'product/:productId', Component: ProductPage },
     ],
   },
   {
