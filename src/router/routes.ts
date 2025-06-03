@@ -2,11 +2,12 @@ import RootPage from '@/pages/RootPage';
 import { createBrowserRouter, redirect } from 'react-router';
 import NotFoundPage from '@/pages/NotFoundPage';
 import LoginPage from '@/pages/LoginPage';
-import { protectedLoader } from './protected-router';
+import { protectedLoader, userIsLoggined } from './protected-router';
 import MainPage from '@/pages/MainPage';
 import RegistrationPage from '@/pages/RegistrationPage';
 import CatalogPage from '@/pages/CatalogPage';
 import ProductPage from '@/pages/ProductPage';
+import ProfilePage from '@/pages/ProfilePage';
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
       { path: 'catalog', Component: CatalogPage },
       { path: 'login', loader: protectedLoader, Component: LoginPage },
       { path: 'product/:productId', Component: ProductPage },
+      { path: 'profile', loader: userIsLoggined, Component: ProfilePage },
     ],
   },
   {
