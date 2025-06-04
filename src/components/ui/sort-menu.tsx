@@ -9,6 +9,7 @@ interface SortMenuProps {
   onSortDiscounted: () => void;
   onSortByNameAsc: () => void;
   onSortByNameDesc: () => void;
+  sortLabel?: string;
 }
 
 export const SortMenu = ({
@@ -19,6 +20,7 @@ export const SortMenu = ({
   onSortDiscounted,
   onSortByNameAsc,
   onSortByNameDesc,
+  sortLabel = 'Sort',
 }: SortMenuProps): React.JSX.Element => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPriceSubmenuOpen, setIsPriceSubmenuOpen] = useState(false);
@@ -42,7 +44,7 @@ export const SortMenu = ({
         boxShadow="md"
         borderRadius="md"
       >
-        Sort
+        {sortLabel}
       </Button>
 
       {isMenuOpen && (

@@ -44,6 +44,8 @@ const CatalogPage = (): React.JSX.Element => {
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
 
+  const [sortLabel, setSortLabel] = useState<string>('Sort');
+
   const filteredProductsByCategory = filterProductsByCategory(
     allProducts,
     selectedCategories
@@ -92,23 +94,30 @@ const CatalogPage = (): React.JSX.Element => {
                 <Flex>
                   <SortMenu
                     currentColors={currentColors}
+                    sortLabel={sortLabel}
                     onSortAll={() => {
                       handleMainFilter('all');
+                      setSortLabel('All');
                     }}
                     onSortByPriceAsc={() => {
                       handlePriceFilter('asc');
+                      setSortLabel('Price ↑');
                     }}
                     onSortByPriceDesc={() => {
                       handlePriceFilter('desc');
+                      setSortLabel('Price ↓');
                     }}
                     onSortDiscounted={() => {
                       handleMainFilter('discounted');
+                      setSortLabel('Discounted');
                     }}
                     onSortByNameAsc={() => {
                       handleNameSort('asc');
+                      setSortLabel('Name A–Z');
                     }}
                     onSortByNameDesc={() => {
                       handleNameSort('desc');
+                      setSortLabel('Name Z–A');
                     }}
                   />
                   <ProductFilter
