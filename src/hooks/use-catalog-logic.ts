@@ -5,7 +5,7 @@ import {
   type IProductWithSortFields,
   enrichProductsForSorting,
 } from '../api/products';
-import { filterProducts } from '../api/products';
+import { filterProducts, sortProducts } from '../api/products';
 
 export const categories = ['Cake', 'Eclair', 'Croissant'];
 export const flavors = ['Chocolate', 'Vanilla', 'Strawberry', 'Lemon'];
@@ -38,8 +38,8 @@ interface UseCatalogLogicResult {
   selectedFlavors: string[];
   setSelectedFlavors: React.Dispatch<React.SetStateAction<string[]>>;
   selectedPriceRange: string | null;
-  setSelectedPriceRange: React.Dispatch<React.SetStateAction<string | null>>;
   onlyDiscounted: boolean;
+  setSelectedPriceRange: React.Dispatch<React.SetStateAction<string | null>>;
   setOnlyDiscounted: React.Dispatch<React.SetStateAction<boolean>>;
   isPriceSubmenuOpen: boolean;
   setIsPriceSubmenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -50,7 +50,7 @@ interface UseCatalogLogicResult {
     setSelected: React.Dispatch<React.SetStateAction<string[]>>
   ) => void;
   applyFullFilter: () => void;
-  handleMainFilter: (filter: 'all' | 'price' | 'discounted') => void;
+  handleMainFilter: (filter: 'all' | 'price' | 'name' | 'type') => void;
   handlePriceFilter: (order: 'asc' | 'desc') => void;
   handleNameSort: (order: 'asc' | 'desc') => void;
   categories: string[];
@@ -136,7 +136,9 @@ export function useCatalogLogic(): UseCatalogLogicResult {
     }
   };
 
-  const handleMainFilter = (filter: 'all' | 'price' | 'discounted'): void => {
+  const handleMainFilter = (
+    filter: 'all' | 'price' | 'name' | 'type'
+  ): void => {
     if (filter === 'price') {
       setIsPriceSubmenuOpen(!isPriceSubmenuOpen);
       return;
@@ -165,38 +167,33 @@ export function useCatalogLogic(): UseCatalogLogicResult {
     }
   };
 
-  const handlePriceFilter = (order: 'asc' | 'desc'): void => {
+  const handlePriceFilter = async (order: 'asc' | 'desc'): Promise<void> => {
     setIsMenuOpen(false);
     setIsPriceSubmenuOpen(false);
     setIsProductsLoading(true);
     setError(null);
 
     try {
-      const sorted = [...allProducts].sort((a, b) =>
-        order === 'asc' ? a.price - b.price : b.price - a.price
-      );
+      const data = await productService.getProducts(20);
+      const enriched = enrichProductsForSorting(data);
+      const sorted = sortProducts(enriched, 'price', order);
       setProducts(sorted);
     } catch {
-      setError('Failed to apply price filter');
+      setError('Failed to sort products by price');
     } finally {
       setIsProductsLoading(false);
     }
   };
 
-  const handleNameSort = (order: 'asc' | 'desc'): void => {
+  const handleNameSort = async (order: 'asc' | 'desc'): Promise<void> => {
     setIsMenuOpen(false);
     setIsProductsLoading(true);
     setError(null);
 
     try {
-      const sorted = [...allProducts].sort((a, b) => {
-        const nameA = a.name['en-US'].toLowerCase();
-        const nameB = b.name['en-US'].toLowerCase();
-        const comparison = nameA.localeCompare(nameB, 'en');
-
-        return order === 'asc' ? comparison : -comparison;
-      });
-
+      const data = await productService.getProducts(20);
+      const enriched = enrichProductsForSorting(data);
+      const sorted = sortProducts(enriched, 'name', order);
       setProducts(sorted);
     } catch (error) {
       if (error instanceof Error) {
@@ -221,12 +218,12 @@ export function useCatalogLogic(): UseCatalogLogicResult {
     isFilterOpen,
     setIsFilterOpen,
     selectedCategories,
+    onlyDiscounted,
     setSelectedCategories,
     selectedFlavors,
     setSelectedFlavors,
     selectedPriceRange,
     setSelectedPriceRange,
-    onlyDiscounted,
     setOnlyDiscounted,
     isPriceSubmenuOpen,
     setIsPriceSubmenuOpen,

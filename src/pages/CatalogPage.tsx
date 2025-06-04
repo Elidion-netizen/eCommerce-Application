@@ -28,8 +28,8 @@ const CatalogPage = (): React.JSX.Element => {
     setSelectedFlavors,
     selectedPriceRange,
     setSelectedPriceRange,
-    onlyDiscounted,
     setOnlyDiscounted,
+    onlyDiscounted,
     menuReference,
     applyFullFilter,
     handleMainFilter,
@@ -106,10 +106,6 @@ const CatalogPage = (): React.JSX.Element => {
                     onSortByPriceDesc={() => {
                       handlePriceFilter('desc');
                       setSortLabel('Price ↓');
-                    }}
-                    onSortDiscounted={() => {
-                      handleMainFilter('discounted');
-                      setSortLabel('Discounted');
                     }}
                     onSortByNameAsc={() => {
                       handleNameSort('asc');

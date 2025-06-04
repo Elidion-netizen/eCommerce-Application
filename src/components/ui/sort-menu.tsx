@@ -6,7 +6,6 @@ interface SortMenuProps {
   onSortAll: () => void;
   onSortByPriceAsc: () => void;
   onSortByPriceDesc: () => void;
-  onSortDiscounted: () => void;
   onSortByNameAsc: () => void;
   onSortByNameDesc: () => void;
   sortLabel?: string;
@@ -17,7 +16,6 @@ export const SortMenu = ({
   onSortAll,
   onSortByPriceAsc,
   onSortByPriceDesc,
-  onSortDiscounted,
   onSortByNameAsc,
   onSortByNameDesc,
   sortLabel = 'Sort',
@@ -147,24 +145,6 @@ export const SortMenu = ({
               </Box>
             )}
           </Box>
-
-          <Text
-            px={4}
-            py={2}
-            cursor="pointer"
-            color={currentColors.text}
-            _hover={{
-              bg: currentColors.border,
-              color: currentColors.cardBg,
-              fontWeight: 'bold',
-            }}
-            onClick={() => {
-              onSortDiscounted();
-              setIsMenuOpen(false);
-            }}
-          >
-            Sale
-          </Text>
 
           <Box
             position="relative"

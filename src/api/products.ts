@@ -227,3 +227,45 @@ export function searchProductsByName(
     );
   });
 }
+
+export function sortProducts(
+  products: IProductWithSortFields[],
+  sortField: 'price' | 'name' | 'discountAmount' | 'type',
+  sortOrder: 'asc' | 'desc' = 'asc'
+): IProductWithSortFields[] {
+  return [...products].sort((a, b) => {
+    let valueA: string | number = '';
+    let valueB: string | number = '';
+
+    switch (sortField) {
+      case 'price': {
+        valueA = a.price;
+        valueB = b.price;
+        break;
+      }
+
+      case 'name': {
+        valueA = a.name['en-US'].toLowerCase();
+        valueB = b.name['en-US'].toLowerCase();
+        break;
+      }
+
+      case 'type': {
+        valueA = a.type.toLowerCase();
+        valueB = b.type.toLowerCase();
+        break;
+      }
+    }
+
+    if (typeof valueA === 'string' && typeof valueB === 'string') {
+      const comp = valueA.localeCompare(valueB);
+      return sortOrder === 'asc' ? comp : -comp;
+    }
+
+    if (typeof valueA === 'number' && typeof valueB === 'number') {
+      return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
+    }
+
+    return 0;
+  });
+}
