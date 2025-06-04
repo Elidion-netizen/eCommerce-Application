@@ -46,30 +46,30 @@ export const ProductSearch = ({
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      try {
-        if (query.trim()) {
-          onLoading(true);
-          const results = searchProductsByName(products, query);
-          const mappedResults = mapProjectionToSortFields(results);
-          onResults(mappedResults);
-          onError(null);
-          onLoading(false);
-        } else {
-          onResults(products);
-          onError(null);
+      void (async (): Promise<void> => {
+        try {
+          if (query.trim()) {
+            onLoading(true);
+            const results = await searchProductsByName(query);
+            const mappedResults = mapProjectionToSortFields(results);
+            onResults(mappedResults);
+            onError(null);
+          } else {
+            onResults(products);
+            onError(null);
+          }
+        } catch {
+          onError('Ошибка при поиске');
+        } finally {
           onLoading(false);
         }
-      } catch {
-        onError('Ошибка при поиске');
-      } finally {
-        onLoading(false);
-      }
+      })();
     }, 300);
 
     return (): void => {
       clearTimeout(handler);
     };
-  });
+  }, [query, onLoading, onResults, onError, products]);
 
   return (
     <>

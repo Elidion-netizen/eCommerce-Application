@@ -50,7 +50,7 @@ interface UseCatalogLogicResult {
     setSelected: React.Dispatch<React.SetStateAction<string[]>>
   ) => void;
   applyFullFilter: () => void;
-  handleMainFilter: (filter: 'all' | 'price' | 'name' | 'type') => void;
+  handleMainFilter: (filter: 'all' | 'price' | 'name') => void;
   handlePriceFilter: (order: 'asc' | 'desc') => void;
   handleNameSort: (order: 'asc' | 'desc') => void;
   categories: string[];
@@ -136,9 +136,7 @@ export function useCatalogLogic(): UseCatalogLogicResult {
     }
   };
 
-  const handleMainFilter = (
-    filter: 'all' | 'price' | 'name' | 'type'
-  ): void => {
+  const handleMainFilter = (filter: 'all' | 'price' | 'name'): void => {
     if (filter === 'price') {
       setIsPriceSubmenuOpen(!isPriceSubmenuOpen);
       return;
