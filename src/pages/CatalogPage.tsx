@@ -34,6 +34,7 @@ const CatalogPage = (): React.JSX.Element => {
     applyFullFilter,
     handleMainFilter,
     handlePriceFilter,
+    handleNameSort,
     flavors,
     priceRanges,
   } = useCatalogLogic();
@@ -102,6 +103,12 @@ const CatalogPage = (): React.JSX.Element => {
                     }}
                     onSortDiscounted={() => {
                       handleMainFilter('discounted');
+                    }}
+                    onSortByNameAsc={() => {
+                      handleNameSort('asc');
+                    }}
+                    onSortByNameDesc={() => {
+                      handleNameSort('desc');
                     }}
                   />
                   <ProductFilter

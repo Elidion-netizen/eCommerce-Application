@@ -52,6 +52,7 @@ interface UseCatalogLogicResult {
   applyFullFilter: () => void;
   handleMainFilter: (filter: 'all' | 'price' | 'discounted') => void;
   handlePriceFilter: (order: 'asc' | 'desc') => void;
+  handleNameSort: (order: 'asc' | 'desc') => void;
   categories: string[];
   flavors: string[];
   priceRanges: string[];
@@ -182,6 +183,32 @@ export function useCatalogLogic(): UseCatalogLogicResult {
     }
   };
 
+  const handleNameSort = (order: 'asc' | 'desc'): void => {
+    setIsMenuOpen(false);
+    setIsProductsLoading(true);
+    setError(null);
+
+    try {
+      const sorted = [...allProducts].sort((a, b) => {
+        const nameA = a.name['en-US'].toLowerCase();
+        const nameB = b.name['en-US'].toLowerCase();
+        const comparison = nameA.localeCompare(nameB, 'en');
+
+        return order === 'asc' ? comparison : -comparison;
+      });
+
+      setProducts(sorted);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Failed to sort by name');
+      }
+    } finally {
+      setIsProductsLoading(false);
+    }
+  };
+
   return {
     allProducts,
     products,
@@ -189,6 +216,7 @@ export function useCatalogLogic(): UseCatalogLogicResult {
     isProductsLoading,
     error,
     isMenuOpen,
+    handleNameSort,
     setIsMenuOpen,
     isFilterOpen,
     setIsFilterOpen,
