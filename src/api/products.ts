@@ -213,19 +213,27 @@ export function filterProductsByCategory(
   });
 }
 
-export function searchProductsByName(
-  products: IProductWithSortFields[],
-  searchQuery: string
-): IProductWithSortFields[] {
-  if (!searchQuery || !searchQuery.trim()) return products;
+export async function searchProductsByName(
+  query: string
+): Promise<IProductProjection[]> {
+  try {
+    const { body } = await createProductApi()
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: {
+          'text.en-US': `${query}*`,
+          limit: 20,
+          staged: true,
+        },
+      })
+      .execute();
 
-  const normalizedQuery = searchQuery.toLowerCase().trim();
-
-  return products.filter((product) => {
-    return Object.values(product.name).some((localizedName) =>
-      localizedName.toLowerCase().includes(normalizedQuery)
-    );
-  });
+    return body.results;
+  } catch (error) {
+    console.error(`Error searching products with query "${query}":`, error);
+    throw new Error('Failed to search products');
+  }
 }
 
 export function sortProducts(
