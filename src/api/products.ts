@@ -101,12 +101,7 @@ export const productService = {
         .execute();
 
       return body.results;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('Error fetching products:', error.message);
-      } else {
-        console.error('Error fetching products:', error);
-      }
+    } catch {
       throw new Error('Failed to load products');
     }
   },
