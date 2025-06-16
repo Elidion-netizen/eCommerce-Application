@@ -68,6 +68,7 @@ export interface IProductVariant {
 
 export interface IProductProjection {
   id: string;
+  price?: number;
   key?: string;
   name: {
     [key: string]: string;

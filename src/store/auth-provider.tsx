@@ -15,7 +15,8 @@ export const AuthProvider = ({
 }: {
   children: ReactNode[] | ReactNode;
 }): React.JSX.Element => {
-  const [isAuth, setIsAuth] = useState<boolean>(getToken());
+  const [isAuth, setIsAuth] = useState<boolean>(Boolean(getToken()));
+
   const login = (response: LoginResponse): void => {
     saveToken(response);
     setIsAuth(true);
@@ -27,9 +28,9 @@ export const AuthProvider = ({
   };
 
   return (
-    <SessionContext value={{ isAuth, login, logout }}>
+    <SessionContext.Provider value={{ isAuth, login, logout }}>
       {children}
-    </SessionContext>
+    </SessionContext.Provider>
   );
 };
 

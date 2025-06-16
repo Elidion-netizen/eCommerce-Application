@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Box, Heading, Container, Flex, Spinner } from '@chakra-ui/react';
 import { useColorMode } from '../components/ui/color-mode';
 import { colors } from '../components/ui/colors';
@@ -10,10 +10,19 @@ import { useCatalogLogic } from '../hooks/use-catalog-logic';
 import { filterProductsByCategory } from '@/api/products';
 import { CategoryNavigation } from '@/components/ui/product-nav';
 import { ProductSearch } from '@/components/ui/search-product';
+import CartIcon from '@/components/ui/busket';
+import { type OrderItem } from './CartPage';
+import { type CartIconHandle } from '@/components/ui/busket';
 
 const manualCategories = ['Cake', 'Eclair', 'Croissant'];
 
 const CatalogPage = (): React.JSX.Element => {
+  const cartReference = useRef<CartIconHandle>(null);
+
+  const handleAddToOrder = (item: OrderItem): void => {
+    cartReference.current?.addToOrder(item);
+  };
+
   const { colorMode } = useColorMode();
   const currentColors = colors[colorMode];
 
@@ -168,7 +177,12 @@ const CatalogPage = (): React.JSX.Element => {
               products={searchResults}
               isLoading={isSearchLoading || isProductsLoading}
               error={error ?? (searchError || undefined)}
+              addToOrder={handleAddToOrder}
             />
+          </Box>
+
+          <Box display="none">
+            <CartIcon ref={cartReference} />
           </Box>
         </Container>
       </Box>
