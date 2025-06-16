@@ -8,6 +8,7 @@ import RegistrationPage from '@/pages/RegistrationPage';
 import CatalogPage from '@/pages/CatalogPage';
 import ProductPage from '@/pages/ProductPage';
 import CartPage from '@/pages/CartPage';
+import AboutUsPage from '@/pages/AboutUsPage';
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
       { path: 'cart', Component: CartPage },
       { path: 'login', loader: protectedLoader, Component: LoginPage },
       { path: 'product/:productId', Component: ProductPage },
+      { path: 'about', Component: AboutUsPage },
     ],
   },
   {
