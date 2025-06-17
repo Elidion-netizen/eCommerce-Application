@@ -156,7 +156,7 @@ const MainPage = (): React.JSX.Element => {
               order={{ base: 2, md: 1 }}
             >
               <Image
-                src="/src/components/ui/img/CrouSale.png"
+                src="./src/components/ui/img/CrouSale.png"
                 alt="Sale"
                 w="500px"
                 h="auto"
