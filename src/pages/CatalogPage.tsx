@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Box, Heading, Container, Flex, Spinner } from '@chakra-ui/react';
 import { useColorMode } from '../components/ui/color-mode';
 import { colors } from '../components/ui/colors';
@@ -10,10 +10,19 @@ import { useCatalogLogic } from '../hooks/use-catalog-logic';
 import { filterProductsByCategory } from '@/api/products';
 import { CategoryNavigation } from '@/components/ui/product-nav';
 import { ProductSearch } from '@/components/ui/search-product';
+import CartIcon from '@/components/ui/busket';
+import { type OrderItem } from './CartPage';
+import { type CartIconHandle } from '@/components/ui/busket';
 
 const manualCategories = ['Cake', 'Eclair', 'Croissant'];
 
 const CatalogPage = (): React.JSX.Element => {
+  const cartReference = useRef<CartIconHandle>(null);
+
+  const handleAddToOrder = (item: OrderItem): void => {
+    cartReference.current?.addToOrder(item);
+  };
+
   const { colorMode } = useColorMode();
   const currentColors = colors[colorMode];
 
@@ -28,12 +37,13 @@ const CatalogPage = (): React.JSX.Element => {
     setSelectedFlavors,
     selectedPriceRange,
     setSelectedPriceRange,
-    onlyDiscounted,
     setOnlyDiscounted,
+    onlyDiscounted,
     menuReference,
     applyFullFilter,
     handleMainFilter,
     handlePriceFilter,
+    handleNameSort,
     flavors,
     priceRanges,
   } = useCatalogLogic();
@@ -41,7 +51,9 @@ const CatalogPage = (): React.JSX.Element => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchResults, setSearchResults] = useState<typeof allProducts>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const [searchError, setSearchError] = useState<string | null>();
+  const [searchError, setSearchError] = useState<string | null>(null);
+
+  const [sortLabel, setSortLabel] = useState<string>('Sort');
 
   const filteredProductsByCategory = filterProductsByCategory(
     allProducts,
@@ -91,17 +103,26 @@ const CatalogPage = (): React.JSX.Element => {
                 <Flex>
                   <SortMenu
                     currentColors={currentColors}
+                    sortLabel={sortLabel}
                     onSortAll={() => {
                       handleMainFilter('all');
+                      setSortLabel('All');
                     }}
                     onSortByPriceAsc={() => {
                       handlePriceFilter('asc');
+                      setSortLabel('Price ↑');
                     }}
                     onSortByPriceDesc={() => {
                       handlePriceFilter('desc');
+                      setSortLabel('Price ↓');
                     }}
-                    onSortDiscounted={() => {
-                      handleMainFilter('discounted');
+                    onSortByNameAsc={() => {
+                      handleNameSort('asc');
+                      setSortLabel('Name A–Z');
+                    }}
+                    onSortByNameDesc={() => {
+                      handleNameSort('desc');
+                      setSortLabel('Name Z–A');
                     }}
                   />
                   <ProductFilter
@@ -156,7 +177,12 @@ const CatalogPage = (): React.JSX.Element => {
               products={searchResults}
               isLoading={isSearchLoading || isProductsLoading}
               error={error ?? (searchError || undefined)}
+              addToOrder={handleAddToOrder}
             />
+          </Box>
+
+          <Box display="none">
+            <CartIcon ref={cartReference} />
           </Box>
         </Container>
       </Box>

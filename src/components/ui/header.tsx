@@ -5,6 +5,8 @@ import { Link as RouterLink } from 'react-router';
 import { useLocation, useNavigate } from 'react-router';
 import { useAuth } from '@/store/auth-provider';
 import { DrawerMenu } from './drawer';
+import React, { useRef } from 'react';
+import CartIcon, { type CartIconHandle } from './busket';
 
 const headerColors = {
   light: {
@@ -34,6 +36,8 @@ interface RenderLinks {
 }
 
 const Header = (): React.JSX.Element => {
+  const cartReference = useRef<CartIconHandle>(null);
+
   const { colorMode } = useColorMode();
   const location = useLocation();
   const navigate = useNavigate();
@@ -179,6 +183,8 @@ const Header = (): React.JSX.Element => {
               </VStack>
             </DrawerMenu>
           </Box>
+
+          <CartIcon ref={cartReference}></CartIcon>
 
           <ColorModeButton
             color={colors.text}

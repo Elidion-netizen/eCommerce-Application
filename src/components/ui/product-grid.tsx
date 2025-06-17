@@ -4,12 +4,14 @@ import { ProductCardSkeleton } from './product-card-skeleton';
 import type { IProductProjection } from '../../api/products';
 import { useColorMode } from './color-mode';
 import { colors } from './colors';
+import { type OrderItem } from '@/pages/CartPage';
 
 interface ProductGridProps {
   products: IProductProjection[];
   isLoading?: boolean;
   error?: string | undefined;
   title?: string;
+  addToOrder: (item: OrderItem) => void;
 }
 
 export const ProductGrid = ({
@@ -17,6 +19,7 @@ export const ProductGrid = ({
   isLoading = false,
   error = undefined,
   title,
+  addToOrder,
 }: ProductGridProps): React.JSX.Element => {
   const { colorMode } = useColorMode();
   const currentColors = colors[colorMode];
@@ -60,7 +63,13 @@ export const ProductGrid = ({
                   key={product.id}
                   product={product}
                   onAddToCart={() => {
-                    console.log('Add to cart:', product.id);
+                    addToOrder({
+                      id: Date.now().toString(),
+                      name: product.name['en-US'],
+                      price: product.price ?? 0,
+                      quantity: 1,
+                      imageUrl: '',
+                    });
                   }}
                 />
               ))}

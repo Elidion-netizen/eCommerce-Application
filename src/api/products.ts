@@ -61,10 +61,14 @@ export interface IProductVariant {
   sku?: string;
   images?: IProductImage[];
   prices?: IProductPrice[];
+  discountAmount?: number;
+  type?: string;
+  price?: IProductPrice;
 }
 
 export interface IProductProjection {
   id: string;
+  price?: number;
   key?: string;
   name: {
     [key: string]: string;
@@ -97,12 +101,7 @@ export const productService = {
         .execute();
 
       return body.results;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('Error fetching products:', error.message);
-      } else {
-        console.error('Error fetching products:', error);
-      }
+    } catch {
       throw new Error('Failed to load products');
     }
   },
@@ -210,17 +209,67 @@ export function filterProductsByCategory(
   });
 }
 
-export function searchProductsByName(
+export async function searchProductsByName(
+  query: string
+): Promise<IProductProjection[]> {
+  try {
+    const { body } = await createProductApi()
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: {
+          'text.en-US': `${query}*`,
+          limit: 20,
+          staged: true,
+        },
+      })
+      .execute();
+
+    return body.results;
+  } catch (error) {
+    console.error(`Error searching products with query "${query}":`, error);
+    throw new Error('Failed to search products');
+  }
+}
+
+export function sortProducts(
   products: IProductWithSortFields[],
-  searchQuery: string
+  sortField: 'price' | 'name' | 'discountAmount' | 'type',
+  sortOrder: 'asc' | 'desc' = 'asc'
 ): IProductWithSortFields[] {
-  if (!searchQuery || !searchQuery.trim()) return products;
+  return [...products].sort((a, b) => {
+    let valueA: string | number = '';
+    let valueB: string | number = '';
 
-  const normalizedQuery = searchQuery.toLowerCase().trim();
+    switch (sortField) {
+      case 'price': {
+        valueA = a.price;
+        valueB = b.price;
+        break;
+      }
 
-  return products.filter((product) => {
-    return Object.values(product.name).some((localizedName) =>
-      localizedName.toLowerCase().includes(normalizedQuery)
-    );
+      case 'name': {
+        valueA = a.name['en-US'].toLowerCase();
+        valueB = b.name['en-US'].toLowerCase();
+        break;
+      }
+
+      case 'type': {
+        valueA = a.type.toLowerCase();
+        valueB = b.type.toLowerCase();
+        break;
+      }
+    }
+
+    if (typeof valueA === 'string' && typeof valueB === 'string') {
+      const comp = valueA.localeCompare(valueB);
+      return sortOrder === 'asc' ? comp : -comp;
+    }
+
+    if (typeof valueA === 'number' && typeof valueB === 'number') {
+      return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
+    }
+
+    return 0;
   });
 }
