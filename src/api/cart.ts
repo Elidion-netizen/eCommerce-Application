@@ -62,10 +62,6 @@ export async function getMyCart(): Promise<Cart[]> {
   }
 
   const data = (await response.json()) as PagedResponse<Cart>;
-  if (data.results.length === 0) {
-    const newCart = await createCart();
-    return [newCart];
-  }
   return data.results;
 }
 
@@ -139,13 +135,23 @@ export async function getProducts(): Promise<Cart[]> {
 
 export async function addToCart(productID: string): Promise<Cart> {
   const carts = await getMyCart();
-  const cartId: string | undefined = carts[0].id;
-  const cartVersion: number = carts[0].version;
+  let cart: Cart | undefined = carts.length > 0 ? carts[0] : undefined;
+
+  if (!cart || !cart.id) {
+    cart = await createCart();
+    if (!cart.id) {
+      throw new Error('Cart creation failed: no ID returned');
+    }
+  }
+
+  const cartId = cart.id;
+  const cartVersion = cart.version;
+
   const apiUrl = import.meta.env.VITE_CTP_API_URL;
   const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
   const accessToken = getToken();
 
-  if (!accessToken || !cartId) {
+  if (!accessToken) {
     throw new Error('No access token provided');
   }
 
@@ -234,7 +240,7 @@ async function createCart(): Promise<Cart> {
     throw new Error('No access token provided');
   }
 
-  const url = `${apiUrl}/${projectKey}/carts`;
+  const url = `${apiUrl}/${projectKey}/me/carts`;
 
   const body = {
     currency: 'EUR',
