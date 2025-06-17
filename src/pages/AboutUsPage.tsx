@@ -80,7 +80,7 @@ export default function AboutUsPage(): React.JSX.Element {
             textAlign="center"
             color={currentColors.text}
           >
-            Our Team
+            Team
           </Heading>
 
           <VStack gap={12} align="stretch">
