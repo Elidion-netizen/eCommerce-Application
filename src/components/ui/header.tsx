@@ -58,6 +58,7 @@ const Header = (): React.JSX.Element => {
       '/catalog',
       '/about',
       ...(isAuth ? ['/profile', '/logout'] : ['/login', '/register']),
+      '/cart',
     ].map((path) => {
       const name = path.slice(1);
       const isActive = currentPath === path;
@@ -112,7 +113,11 @@ const Header = (): React.JSX.Element => {
           }}
         >
           <RouterLink to={path}>
-            {name.charAt(0).toUpperCase() + name.slice(1)}
+            {path === '/cart' ? (
+              <CartIcon ref={cartReference} />
+            ) : (
+              name.charAt(0).toUpperCase() + name.slice(1)
+            )}
           </RouterLink>
         </Link>
       );
@@ -183,20 +188,6 @@ const Header = (): React.JSX.Element => {
               </VStack>
             </DrawerMenu>
           </Box>
-
-          <Flex align="center" gap={2}>
-            <Link
-              asChild
-              color={colors.text}
-              fontWeight="bold"
-              letterSpacing="wide"
-              fontSize="lg"
-              _hover={{ textDecoration: 'none' }}
-              _focus={{ outline: 'none' }}
-            >
-              <CartIcon ref={cartReference}></CartIcon>
-            </Link>
-          </Flex>
 
           <ColorModeButton
             color={colors.text}
