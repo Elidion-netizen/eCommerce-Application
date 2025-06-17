@@ -184,7 +184,19 @@ const Header = (): React.JSX.Element => {
             </DrawerMenu>
           </Box>
 
-          <CartIcon ref={cartReference}></CartIcon>
+          <Flex align="center" gap={2}>
+            <Link
+              asChild
+              color={colors.text}
+              fontWeight="bold"
+              letterSpacing="wide"
+              fontSize="lg"
+              _hover={{ textDecoration: 'none' }}
+              _focus={{ outline: 'none' }}
+            >
+              <CartIcon ref={cartReference}></CartIcon>
+            </Link>
+          </Flex>
 
           <ColorModeButton
             color={colors.text}

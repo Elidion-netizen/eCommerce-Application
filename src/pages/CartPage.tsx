@@ -92,7 +92,9 @@ class CartPageInner extends Component<Props, State> {
           <Button
             variant="outline"
             size="md"
-            onClick={void this.clearCart}
+            onClick={async () => {
+              await this.clearCart();
+            }}
             _hover={{ bg: currentColors.button, color: currentColors.cardBg }}
           >
             Remove All

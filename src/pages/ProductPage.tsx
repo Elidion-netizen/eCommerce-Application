@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { productService, type IProductProjection } from '../api/products';
 import { PageLoader } from '../components/ui/page-loader';
 import { ProductCard } from '../components/ui/product-card';
+import { addToCart } from '@/api/cart';
 
 const ProductPage = (): React.JSX.Element => {
   const { productId } = useParams();
@@ -65,7 +66,9 @@ const ProductPage = (): React.JSX.Element => {
         variant="detailed"
         showNavigationArrows={true}
         onAddToCart={() => {
-          console.log('Add to cart:', product.id);
+          addToCart(product.id).catch((error: unknown) => {
+            console.log(error);
+          });
         }}
       />
     </Container>
