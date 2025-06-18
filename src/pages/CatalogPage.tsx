@@ -7,7 +7,10 @@ import { ProductGrid } from '../components/ui/product-grid';
 import { ProductFilter } from '@/components/ui/product-filter';
 import { SortMenu } from '@/components/ui/sort-menu';
 import { useCatalogLogic } from '../hooks/use-catalog-logic';
-import { filterProductsByCategory } from '@/api/products';
+import {
+  filterProductsByCategory,
+  type IProductProjection,
+} from '@/api/products';
 import { CategoryNavigation } from '@/components/ui/product-nav';
 import { ProductSearch } from '@/components/ui/search-product';
 import CartIcon from '@/components/ui/busket';
@@ -49,7 +52,7 @@ const CatalogPage = (): React.JSX.Element => {
   } = useCatalogLogic();
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [searchResults, setSearchResults] = useState<typeof allProducts>([]);
+  const [searchResults, setSearchResults] = useState<IProductProjection[]>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
 
