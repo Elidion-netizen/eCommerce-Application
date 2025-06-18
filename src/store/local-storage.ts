@@ -1,5 +1,5 @@
 import type { LoginResponse } from '@/models/login/login.model';
-import { TOKEN_KEY } from '../constants';
+import { TOKEN_KEY } from '@/constants';
 import { validToken } from '@/models/token/validators';
 
 interface Session {

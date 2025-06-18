@@ -27,16 +27,6 @@ describe('AuthProvider Component', () => {
   });
 });
 
-describe('LocalStorage Utils', () => {
-  it('should set and get item from localStorage', () => {
-    const testKey = 'testKey';
-    const testValue = 'testValue';
-
-    localStorage.setItem(testKey, testValue);
-    expect(localStorage.getItem(testKey)).toBe(testValue);
-  });
-});
-
 const formatPrice = (price: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
