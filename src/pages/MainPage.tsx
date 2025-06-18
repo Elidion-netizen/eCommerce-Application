@@ -185,6 +185,7 @@ const MainPage = (): React.JSX.Element => {
               products={products}
               isLoading={isProductsLoading}
               error={error}
+              addToOrder={() => {}}
             />
           </Box>
         </Container>

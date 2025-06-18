@@ -1,9 +1,4 @@
-import React, {
-  forwardRef,
-  useImperativeHandle,
-  useState,
-  useEffect,
-} from 'react';
+import { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
 import { FaCartShopping } from 'react-icons/fa6';
 import { Box } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
@@ -16,7 +11,7 @@ export type CartIconHandle = {
   addToOrder: (item: OrderItem) => void;
 };
 
-const CartIcon = forwardRef<CartIconHandle, object>((props, ref) => {
+const CartIcon = forwardRef<CartIconHandle, object>((_props, ref) => {
   const { colorMode } = useColorMode();
   const navigate = useNavigate();
   const currentColors = colors[colorMode];
@@ -55,7 +50,13 @@ const CartIcon = forwardRef<CartIconHandle, object>((props, ref) => {
   }));
 
   return (
-    <Box position="relative" cursor="pointer" onClick={() => navigate('/cart')}>
+    <Box
+      position="relative"
+      cursor="pointer"
+      onClick={() => {
+        void navigate('/cart');
+      }}
+    >
       <FaCartShopping color={currentColors.text} size={20} />
     </Box>
   );
