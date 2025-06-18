@@ -80,7 +80,7 @@ export default function AboutUsPage(): React.JSX.Element {
             textAlign="center"
             color={currentColors.text}
           >
-            Team
+            Our Team
           </Heading>
 
           <VStack gap={12} align="stretch">
@@ -94,7 +94,7 @@ export default function AboutUsPage(): React.JSX.Element {
             >
               <HStack gap={6} align="start">
                 <Image
-                  src="./src/components/ui/img/Kelvin.png"
+                  src="https://i.postimg.cc/0Q1y3q1W/Kelvin.png"
                   alt="Team Member"
                   boxSize="150px"
                   borderRadius="full"
@@ -136,7 +136,7 @@ export default function AboutUsPage(): React.JSX.Element {
             >
               <HStack gap={6} align="start">
                 <Image
-                  src="./src/components/ui/img/Nelli.jpg"
+                  src="https://i.postimg.cc/fL7RQgww/Nelli.jpg"
                   alt="Team Member"
                   boxSize="150px"
                   borderRadius="full"
@@ -181,7 +181,7 @@ export default function AboutUsPage(): React.JSX.Element {
             >
               <HStack gap={6} align="start">
                 <Image
-                  src="./src/components/ui/img/ketchupanezzRss.png"
+                  src="https://i.postimg.cc/HnpsY4xb/ketchupanezz-Rss.png"
                   alt="Ketchupanezz"
                   boxSize="150px"
                   borderRadius="full"
