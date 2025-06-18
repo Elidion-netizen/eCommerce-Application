@@ -94,7 +94,7 @@ export default function AboutUsPage(): React.JSX.Element {
             >
               <HStack gap={6} align="start">
                 <Image
-                  src="/src/components/ui/img/Kelvin.png"
+                  src="./src/components/ui/img/Kelvin.png"
                   alt="Team Member"
                   boxSize="150px"
                   borderRadius="full"
@@ -136,7 +136,7 @@ export default function AboutUsPage(): React.JSX.Element {
             >
               <HStack gap={6} align="start">
                 <Image
-                  src="/src/components/ui/img/Nelli.jpg"
+                  src="./src/components/ui/img/Nelli.jpg"
                   alt="Team Member"
                   boxSize="150px"
                   borderRadius="full"
@@ -181,7 +181,7 @@ export default function AboutUsPage(): React.JSX.Element {
             >
               <HStack gap={6} align="start">
                 <Image
-                  src="/src/components/ui/img/ketchupanezzRss.png"
+                  src="./src/components/ui/img/ketchupanezzRss.png"
                   alt="Ketchupanezz"
                   boxSize="150px"
                   borderRadius="full"
