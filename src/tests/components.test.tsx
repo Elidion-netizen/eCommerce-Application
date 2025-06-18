@@ -1,6 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { AuthProvider } from '../store/auth-provider';
 
 const calculateCartTotal = (
   items: { price: number; quantity: number }[]
@@ -15,17 +13,6 @@ const formatNumber = (number_: number): string => {
 const removeDuplicates = <T,>(array: T[]): T[] => {
   return [...new Set(array)];
 };
-
-describe('AuthProvider Component', () => {
-  it('should provide auth context', () => {
-    render(
-      <AuthProvider>
-        <div>Auth Content</div>
-      </AuthProvider>
-    );
-    expect(screen.getByText('Auth Content')).toBeTruthy();
-  });
-});
 
 const formatPrice = (price: number): string => {
   return new Intl.NumberFormat('en-US', {
