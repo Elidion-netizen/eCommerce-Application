@@ -92,8 +92,8 @@ class CartPageInner extends Component<Props, State> {
           <Button
             variant="outline"
             size="md"
-            onClick={async () => {
-              await this.clearCart();
+            onClick={() => {
+              void this.clearCart();
             }}
             _hover={{ bg: currentColors.button, color: currentColors.cardBg }}
           >
@@ -134,7 +134,7 @@ class CartPageInner extends Component<Props, State> {
               </RouterLink>
             </Text>
           ) : (
-            <VStack align="start" spacing={4} width="100%">
+            <VStack align="start" gap={4} width="100%">
               <HStack
                 width="100%"
                 fontWeight="bold"

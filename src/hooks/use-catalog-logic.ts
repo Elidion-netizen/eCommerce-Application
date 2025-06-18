@@ -154,11 +154,11 @@ export function useCatalogLogic(): UseCatalogLogicResult {
           setProducts(allProducts);
           break;
         }
-        case 'discounted': {
-          const filtered = allProducts.filter((p) => p.discountAmount > 0);
-          setProducts(filtered);
-          break;
-        }
+        // case 'discounted': {
+        //   const filtered = allProducts.filter((p) => p.discountAmount > 0);
+        //   setProducts(filtered);
+        //   break;
+        // }
       }
     } catch {
       setError('Failed to apply filter');
