@@ -5,6 +5,9 @@ import { Link as RouterLink } from 'react-router';
 import { useLocation, useNavigate } from 'react-router';
 import { useAuth } from '@/store/auth-provider';
 import { DrawerMenu } from './drawer';
+import React /*, { useRef } */ from 'react';
+// import { /*CartIcon,*/ type CartIconHandle } from './busket';
+import { FaCartShopping } from 'react-icons/fa6';
 
 const headerColors = {
   light: {
@@ -34,6 +37,8 @@ interface RenderLinks {
 }
 
 const Header = (): React.JSX.Element => {
+  // const cartReference = useRef<CartIconHandle>(null);
+
   const { colorMode } = useColorMode();
   const location = useLocation();
   const navigate = useNavigate();
@@ -54,6 +59,7 @@ const Header = (): React.JSX.Element => {
       '/catalog',
       '/about',
       ...(isAuth ? ['/profile', '/logout'] : ['/login', '/register']),
+      '/cart',
     ].map((path) => {
       const name = path.slice(1);
       const isActive = currentPath === path;
@@ -108,7 +114,11 @@ const Header = (): React.JSX.Element => {
           }}
         >
           <RouterLink to={path}>
-            {name.charAt(0).toUpperCase() + name.slice(1)}
+            {path === '/cart' ? (
+              <FaCartShopping />
+            ) : (
+              name.charAt(0).toUpperCase() + name.slice(1)
+            )}
           </RouterLink>
         </Link>
       );

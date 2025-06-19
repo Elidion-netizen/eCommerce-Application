@@ -1,5 +1,6 @@
 import type { LoginResponse } from '@/models/login/login.model';
 import { validLoginError, validLogiResponse } from '@/models/login/validators';
+// import { getToken } from '@/store/local-storage';
 
 const {
   VITE_CTP_CLIENT_ID,
@@ -39,3 +40,29 @@ export async function getTokenPassword(data: {
     throw new Error('unknown error');
   }
 }
+
+// export const getAnonymousToken = async () => {
+//   const credentials = btoa('CLIENT_ID:CLIENT_SECRET');
+
+//   const anonymousId = crypto.randomUUID();
+
+//   const response = await fetch(
+//     `${VITE_CTP_AUTH_URL}/oauth/${VITE_CTP_PROJECT_KEY}/anonymous/token`,
+//     {
+//       method: 'POST',
+//       headers: {
+//         Authorization: `Basic ${credentials}`,
+//         'Content-Type': 'application/x-www-form-urlencoded',
+//       },
+//       body: `grant_type=anonymous_id&anonymous_id=${anonymousId}`,
+//     }
+//   );
+
+//   if (!response.ok) {
+//     throw new Error('Failed to get anonymous token');
+//   }
+
+//   const data: unknown = await response.json();
+//   localStorage.setItem('accessToken', data.access_token);
+//   return data.access_token;
+// };

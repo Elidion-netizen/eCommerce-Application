@@ -10,16 +10,16 @@ import { ImageModal } from './image-modal';
 
 interface ProductCardProps {
   product: IProductProjection;
-  onAddToCart?: () => void;
   variant?: 'default' | 'detailed';
   showNavigationArrows?: boolean;
+  onAddToCart?: () => void;
 }
 
 export const ProductCard = ({
   product,
-  onAddToCart,
   variant = 'default',
   showNavigationArrows = false,
+  onAddToCart,
 }: ProductCardProps): React.JSX.Element => {
   const { colorMode } = useColorMode();
   const navigate = useNavigate();
@@ -206,9 +206,9 @@ export const ProductCard = ({
 
           <Button
             variant="solid"
-            onClick={onAddToCart}
             w="full"
             mt="auto"
+            onClick={onAddToCart}
             size={isDetailed ? 'lg' : 'md'}
             _hover={{
               transform: 'translateY(-2px)',

@@ -18,7 +18,7 @@ export const AuthProvider = ({
 }): React.JSX.Element => {
   const initialToken = getToken();
   const [token, setToken] = useState<string | null>(initialToken);
-  const [isAuth, setIsAuth] = useState<boolean>(!!initialToken);
+  const [isAuth, setIsAuth] = useState<boolean>(Boolean(getToken()));
 
   const login = (response: LoginResponse): void => {
     saveToken(response);
@@ -32,9 +32,9 @@ export const AuthProvider = ({
   };
 
   return (
-    <SessionContext value={{ token, isAuth, login, logout }}>
+    <SessionContext.Provider value={{ isAuth, login, logout }}>
       {children}
-    </SessionContext>
+    </SessionContext.Provider>
   );
 };
 
