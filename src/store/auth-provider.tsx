@@ -3,6 +3,7 @@ import { createContext, type ReactNode, useContext, useState } from 'react';
 import { getToken, removeToken, saveToken } from './local-storage';
 
 interface AuthData {
+  token: string | null;
   login: (token: LoginResponse) => void;
   logout: () => void;
   isAuth: boolean;
@@ -15,9 +16,13 @@ export const AuthProvider = ({
 }: {
   children: ReactNode[] | ReactNode;
 }): React.JSX.Element => {
-  const [isAuth, setIsAuth] = useState<boolean>(getToken());
+  const initialToken = getToken();
+  const [token, setToken] = useState<string | null>(initialToken);
+  const [isAuth, setIsAuth] = useState<boolean>(!!initialToken);
+
   const login = (response: LoginResponse): void => {
     saveToken(response);
+    setToken(response.access_token);
     setIsAuth(true);
   };
 
@@ -27,7 +32,7 @@ export const AuthProvider = ({
   };
 
   return (
-    <SessionContext value={{ isAuth, login, logout }}>
+    <SessionContext value={{ token, isAuth, login, logout }}>
       {children}
     </SessionContext>
   );

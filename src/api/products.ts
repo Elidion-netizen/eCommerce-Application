@@ -61,6 +61,9 @@ export interface IProductVariant {
   sku?: string;
   images?: IProductImage[];
   prices?: IProductPrice[];
+  discountAmount?: number;
+  type?: string;
+  price?: IProductPrice;
 }
 
 export interface IProductProjection {

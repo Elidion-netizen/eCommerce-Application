@@ -1,5 +1,3 @@
-// components/ui/sort-menu.tsx
-
 import { Box, Button, Text } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 
